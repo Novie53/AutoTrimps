@@ -1,20 +1,279 @@
 MODULES["jobs"] = {};
-
-//Helium
-
-MODULES["jobs"].scientistRatio = 25;
-MODULES["jobs"].scientistRatio2 = 10;
-MODULES["jobs"].scientistRatio3 = 100;
-MODULES["jobs"].magmamancerRatio = 0.1;
+MODULES.jobs.scientistRatio = 25;		//ratio for scientists. (totalRatios / this)
+MODULES.jobs.scientistRatio2 = 10;	   //used for lowlevel and Watch challenge
+MODULES.jobs.magmamancerRatio = 0.1;	 //buys 10% of your gem resources per go.
 //Worker Ratios = [Farmer,Lumber,Miner]
-MODULES["jobs"].autoRatio7 = [1, 1, 98];
-MODULES["jobs"].autoRatio6 = [1, 7, 12];
-MODULES["jobs"].autoRatio5 = [1, 2, 22];
-MODULES["jobs"].autoRatio4 = [1, 1.1, 10];
-MODULES["jobs"].autoRatio3 = [3, 1, 4];
-MODULES["jobs"].autoRatio2 = [3, 3.1, 5];
-MODULES["jobs"].autoRatio1 = [1.1, 1.15, 1.2];
-MODULES["jobs"].customRatio;
+MODULES.jobs.autoRatio6 = [1,12,12];
+MODULES.jobs.autoRatio5 = [1,2,22];
+MODULES.jobs.autoRatio4 = [1,1,10];
+MODULES.jobs.autoRatio3 = [3,1,4];
+MODULES.jobs.autoRatio2 = [3,3,5];
+MODULES.jobs.autoRatio1 = [1,1,1];
+MODULES.jobs.customRatio;
+
+var tierMagmamancers = 0;
+
+
+//positive amounts will buy and negative amounts will fire jobs
+//allowAutoFire will fire a farmer to make room if needed. Used for Scientist, Trainer and Explorer;
+function AT_safeBuyFireJob (jobName, amount, allowAutoFire) {
+	if (!Number.isInteger(amount)) {
+		throw "Error, not valid amount input: \"" + amount + "\"";
+	}
+	if (amount === 0 || !(jobName in game.jobs)) { return; }
+	
+	let old = preBuy2();
+	if (amount < 0) {
+		amount = Math.abs(amount);
+		AT__FireJob(jobName, amount);
+	}
+	else {
+		AT__BuyJob(jobName, amount, allowAutoFire)
+	}	
+	postBuy2(old);
+}
+
+function AT__FireJob(jobName, amount) {
+	let debug_TrimpsBefore = game.jobs[jobName].owned;
+	let debug_WorkspacesBefore = game.workspaces;
+	
+	
+	amount = Math.min(amount, game.jobs[jobName].owned);
+	if (amount >= 1) {
+		game.global.firing = true;
+		game.global.buyAmt = amount;
+		debug("Firing " + prettify(amount) + ' ' + jobName + 's', "jobs", "*users");
+		buyJob(jobName, true, true);
+	
+	
+		if ((debug_TrimpsBefore - amount) != game.jobs[jobName].owned) {
+			console.log("Error, Should not happen - jobs.js");
+			toggleSetting('pauseGame');
+			debugger
+		}
+		if ((debug_WorkspacesBefore + amount) != game.workspaces) {
+			console.log("Error, Should not happen - jobs.js");
+			toggleSetting('pauseGame');
+			debugger
+		}
+	}
+	
+	/*
+	let oldjob = game.jobs[job].owned;
+	if (oldjob == 0 || amount == 0)
+		return 0;
+	let test = oldjob;
+	let x = 1;
+	if (amount != null)
+		x = amount;
+	if (!Number.isFinite(oldjob)) {
+		while (oldjob == test) {
+			test -= x;
+			x *= 2;
+		}
+	}
+	let old = preBuy2();
+	game.global.firing = true;
+	let freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+	while (x >= 1 && freeWorkers == Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed) {
+		game.global.buyAmt = x;
+		buyJob(job, true, true);
+		x *= 2;
+	}
+	postBuy2(old);
+	return x / 2;
+	*/
+}
+
+function AT__BuyJob(jobName, amount, allowAutoFire) {
+	let canAfford = AT_canAffordJob(jobName, amount);
+	if (!canAfford) {
+		amount = calculateMaxAfford(game.jobs[jobName], false, false, true);
+		canAfford = AT_canAffordJob(jobName, amount);
+		if (!canAfford) return false;
+	}
+	
+	let missingWorkers = amount - game.workspaces;
+	if (missingWorkers > 0 && allowAutoFire)
+		AT__FireJob("Farmer", missingWorkers);
+	else if (missingWorkers > 0)
+		amount -= missingWorkers;
+	
+	
+	
+	
+	let debug_TrimpsBefore = game.jobs[jobName].owned;
+	let debug_WorkspacesBefore = game.workspaces;
+	
+	if (amount >= 1) {
+		game.global.firing = false;
+		game.global.buyAmt = amount;
+		debug("Hiring " + prettify(game.global.buyAmt) + ' ' + jobName + 's', "jobs", "*users");
+		buyJob(jobName, true, true);
+	
+		if ((debug_TrimpsBefore + game.global.buyAmt) != game.jobs[jobName].owned) {
+			console.log("Error, Should not happen - jobs.js");
+			toggleSetting('pauseGame');
+			debugger
+		}
+		if ((debug_WorkspacesBefore - game.global.buyAmt) != game.workspaces) {
+			console.log("Error, Should not happen - jobs.js");
+			toggleSetting('pauseGame');
+			debugger
+		}
+	}
+}
+
+function AT_workerRatios() {
+	let ratioSet;
+	if (MODULES["jobs"].customRatio) {
+		ratioSet = MODULES["jobs"].customRatio;
+	} else if (game.buildings.Tribute.owned > 3000 && mutations.Magma.active()) {
+		ratioSet = MODULES["jobs"].autoRatio6;
+	} else if (game.buildings.Tribute.owned > 1500) {
+		ratioSet = MODULES["jobs"].autoRatio5;
+	} else if (game.buildings.Tribute.owned > 1000) {
+		ratioSet = MODULES["jobs"].autoRatio4;
+	} else if (game.resources.trimps.realMax() > 3000000) {
+		ratioSet = MODULES["jobs"].autoRatio3;
+	} else if (game.resources.trimps.realMax() > 300000) {
+		ratioSet = MODULES["jobs"].autoRatio2;
+	} else {
+		ratioSet = MODULES["jobs"].autoRatio1;
+	}
+	//Override normal ratios with challenge specific ones
+	if (game.global.challengeActive == 'Watch'){
+		ratioSet = MODULES["jobs"].autoRatio1;
+	}
+	//Install the new ratios into active settings
+	setPageSetting('FarmerRatio',ratioSet[0]);
+	setPageSetting('LumberjackRatio',ratioSet[1]);
+	setPageSetting('MinerRatio',ratioSet[2]);
+}
+
+function AT_buyJobs_MainThree() {
+	let mainJobRatio = [
+		["Farmer", !game.jobs["Farmer"].locked ? parseInt(getPageSetting("FarmerRatio")) : 0],
+		["Lumberjack", !game.jobs["Lumberjack"].locked ? parseInt(getPageSetting("LumberjackRatio")) : 0],
+		["Miner", !game.jobs["Miner"].locked ? parseInt(getPageSetting("MinerRatio")) : 0]	
+	]
+	let totalRatio = mainJobRatio[0][1] + mainJobRatio[1][1] + mainJobRatio[2][1];
+
+	for (let i in mainJobRatio) {
+		let jobName = mainJobRatio[i][0];
+		if (game.jobs[jobName].locked) continue;
+		
+		let freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+		let totalDistributableWorkers = freeWorkers + game.jobs.Farmer.owned + game.jobs.Miner.owned + game.jobs.Lumberjack.owned;
+		let toBuy = Math.floor((mainJobRatio[i][1] / totalRatio) * totalDistributableWorkers) - game.jobs[jobName].owned;
+		if (toBuy != 0) {
+			AT_safeBuyFireJob(jobName, toBuy, false);
+		}
+	}
+}
+
+function AT_buyJobs_LessThree() {
+	if (!game.jobs.Scientist.locked) {
+		let freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+		let totalDistributableWorkers = freeWorkers + game.jobs.Farmer.owned + game.jobs.Miner.owned + game.jobs.Lumberjack.owned;
+		let totalRatio = !game.jobs["Farmer"].locked ? parseInt(getPageSetting("FarmerRatio")) : 0 + 
+						 !game.jobs["Lumberjack"].locked ? parseInt(getPageSetting("LumberjackRatio")) : 0 + 
+						 !game.jobs["Miner"].locked ? parseInt(getPageSetting("MinerRatio")) : 0;
+		let scientistRatio = game.jobs.Farmer.owned < 100 ? totalRatio / MODULES["jobs"].scientistRatio2 : totalRatio / MODULES["jobs"].scientistRatio;
+		let toBuy = Math.floor((scientistRatio / totalRatio) * totalDistributableWorkers) - game.jobs.Scientist.owned;
+		if (toBuy > 0) {
+			if (getPageSetting('MaxScientists') != -1) {
+				toBuy = Math.min(toBuy, Math.max(getPageSetting('MaxScientists') - game.jobs.Scientist.owned, 0));
+			}
+			AT_safeBuyFireJob("Scientist", toBuy, true);
+		}
+	}
+	
+	if (!game.jobs.Trainer.locked && (getPageSetting('MaxTrainers') > game.jobs.Trainer.owned || getPageSetting('MaxTrainers') == -1)) {
+		let trainerpercent = getPageSetting('TrainerCaptoTributes');
+		if (trainerpercent > 0 && !game.buildings.Tribute.locked) {
+			let curtrainercost = game.jobs.Trainer.cost.food[0]*Math.pow(game.jobs.Trainer.cost.food[1], game.jobs.Trainer.owned);
+			let curtributecost = getBuildingItemPrice(game.buildings.Tribute, "food", false, 1) * Math.pow(1 - game.portal.Resourceful.modifier, game.portal.Resourceful.level);
+			if (curtrainercost < curtributecost * (trainerpercent/100))
+				AT_safeBuyFireJob('Trainer', 1, true);
+		}
+		else
+			AT_safeBuyFireJob('Trainer', 1, true);
+	}
+	
+	if (getPageSetting('MaxExplorers') > game.jobs.Explorer.owned || getPageSetting('MaxExplorers') == -1) {
+		AT_safeBuyFireJob('Explorer', 1, true);
+	}
+}
+
+function AT_buyMagmaMancer() {
+	if (game.jobs.Magmamancer.locked) return;
+	debugger
+	
+	//game.jobs.Magmamancer.getBonusPercent(true);
+	let timeOnZone = Math.floor((new Date().getTime() - game.global.zoneStarted) / 60000);
+	// Add 5 minutes for zone-time for magmamancer mastery
+	if (game.talents.magmamancer.purchased)
+		timeOnZone += 5;
+	let stacks2 = Math.floor(timeOnZone / 10);
+	if (getPageSetting('AutoMagmamancers') && stacks2 > tierMagmamancers) {
+		let old = preBuy2();
+		game.global.firing = false;
+		game.global.buyAmt = 'Max';
+		game.global.maxSplit = MODULES["jobs"].magmamancerRatio;	// (10%)
+		
+		let firesomedudes = calculateMaxAfford(game.jobs['Magmamancer'], false, false, true);
+		//fire (10x) as many workers as we need so "Max" (0.1) can work, because FreeWorkers are considered as part of the (10%) calc
+		let inverse = (1 /  MODULES["jobs"].magmamancerRatio);
+		firesomedudes *= inverse;
+
+		if (game.jobs.Farmer.owned > firesomedudes)
+			fireJobs('Farmer', firesomedudes);
+		else if (game.jobs.Lumberjack.owned > firesomedudes)
+			fireJobs('Lumberjack', firesomedudes);
+		else if (game.jobs.Miner.owned > firesomedudes)
+			fireJobs('Miner', firesomedudes);
+		//buy the Magmamancers
+		game.global.firing = false;
+		game.global.buyAmt = 'Max';
+		game.global.maxSplit = MODULES["jobs"].magmamancerRatio;
+		buyJob('Magmamancer', true, true);
+		postBuy2(old);
+		debug("Bought " + (firesomedudes/inverse) + ' Magmamancers. Total Owned: ' + game.jobs['Magmamancer'].owned, "magmite", "*users");
+		tierMagmamancers += 1;
+	}
+	else if (stacks2 < tierMagmamancers) {
+		tierMagmamancers = 0;
+	}
+	
+}
+
+function AT_buyJobs() {
+	if (game.resources.trimps.owned / game.resources.trimps.realMax() < 0.9) return;
+	if (game.global.challengeActive == "Watch") return;
+	
+	AT_buyJobs_LessThree(); //Scientist, Trainers, Explorers
+	AT_buyJobs_MainThree(); //Farmer, Lumberjack, Miner
+	AT_buyMagmaMancer(); 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
 function safeBuyJob(jobTitle, amount) {
     if (!Number.isFinite(amount) || amount === 0 || typeof amount === 'undefined' || Number.isNaN(amount)) {
@@ -281,6 +540,25 @@ function workerRatios() {
     setPageSetting('LumberjackRatio', ratioSet[1]);
     setPageSetting('MinerRatio', ratioSet[2]);
 }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //Radon
 

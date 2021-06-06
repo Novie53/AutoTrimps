@@ -92,9 +92,10 @@ function delayStartAgain(){
 //1.0.4		Importing buildings.js (50% done)
 //1.0.5		Importing buildings.js (100% done)
 //1.0.6		Importing upgrades.js
+//1.0.7		Importing jobs.js
 
 
-var ATversion = "1.0.6";
+var ATversion = "1.0.7";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -186,6 +187,10 @@ function mainLoop() {
 		else if (getPageSetting('BuyBuildingsNew') == 3) AT_buyStorage();
 		//Upgrades
 		if (getPageSetting('BuyUpgradesNew') != 0) AT_buyUpgrades();
+		//Jobs
+		if (getPageSetting('BuyJobsNew') == 1) { AT_workerRatios(); AT_buyJobs(); }
+		else if (getPageSetting('BuyJobsNew') == 2) AT_buyJobs();
+		
 		
 		
 		if (getPageSetting('AutoMaps') > 0 && game.global.mapsUnlocked) autoMap();
@@ -201,13 +206,6 @@ function mainLoop() {
 		
 
 		if (getPageSetting('UseAutoGen') == true) autoGenerator();
-
-		//Jobs
-		if (getPageSetting('BuyJobsNew') == 1) {
-			workerRatios();
-			buyJobs();
-		} 
-		else if (getPageSetting('BuyJobsNew') == 2) buyJobs();
 
 		//Portal
 		if (autoTrimpSettings.AutoPortal.selected != "Off" && game.global.challengeActive != "Daily" && !game.global.runningChallengeSquared) autoPortal();
