@@ -961,7 +961,7 @@ function autoMap() {
                 runMap();
                 lastMapWeWereIn = getCurrentMapObject();
             } else {
-                debug("Buying a Map, level: #" + mapLvlPicked + " for " + updateMapCost(true).toExponential(2) + " fragments", "maps", 'th-large');
+                debug("Buying a Map, level: #" + mapLvlPicked + " for " + prettify(updateMapCost(true)) + " fragments", "maps", 'th-large');
                 var result = buyMap();
                 if (result == -2) {
                     debug("Too many maps, recycling now: ", "maps", 'th-large');
