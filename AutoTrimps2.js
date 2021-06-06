@@ -89,9 +89,10 @@ function delayStartAgain(){
 
 //1.0.2		More imports
 //1.0.3		Think I have Completly imported gather.js
+//1.0.4		Importing buildings.js (50% done)
 
 
-var ATversion = "1.0.3";
+var ATversion = "1.0.4";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
