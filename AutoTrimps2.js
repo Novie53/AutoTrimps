@@ -91,9 +91,10 @@ function delayStartAgain(){
 //1.0.3		Think I have Completly imported gather.js
 //1.0.4		Importing buildings.js (50% done)
 //1.0.5		Importing buildings.js (100% done)
+//1.0.6		Importing upgrades.js
 
 
-var ATversion = "1.0.5";
+var ATversion = "1.0.6";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -144,7 +145,7 @@ var AT_GlobalVars = {};
 function mainLoop() {
 	if (ATrunning == false) return;
 	if (getPageSetting('PauseScript') || game.options.menu.pauseGame.enabled || game.global.viewingUpgrades) return;
-	ATrunning = true;
+	
 	if (getPageSetting('showbreedtimer') == true) {
 		if (game.options.menu.showFullBreed.enabled != 1) toggleSetting("showFullBreed");
 		addbreedTimerInsideText.innerHTML = ((game.jobs.Amalgamator.owned > 0) ? Math.floor((new Date().getTime() - game.global.lastSoldierSentAt) / 1000) : Math.floor(game.global.lastBreedTime / 1000)) + 's'; //add breed time for next army;
@@ -176,13 +177,15 @@ function mainLoop() {
 			autoLevelEquipment();
 		}
 
-		//Core
+		///////// Core //////////
 		//Gather
 		if (getPageSetting("ManualGather2") > 0) AT_gather();
 		//Buildings
 		if (getPageSetting('BuyBuildingsNew') == 1) { AT_buyBuildings(); AT_buyStorage(); }
 		else if (getPageSetting('BuyBuildingsNew') == 2) AT_buyBuildings();
 		else if (getPageSetting('BuyBuildingsNew') == 3) AT_buyStorage();
+		//Upgrades
+		if (getPageSetting('BuyUpgradesNew') != 0) AT_buyUpgrades();
 		
 		
 		if (getPageSetting('AutoMaps') > 0 && game.global.mapsUnlocked) autoMap();
@@ -195,7 +198,7 @@ function mainLoop() {
 		if (getPageSetting('spendmagmite') == 2 && !magmiteSpenderChanged) autoMagmiteSpender();
 		if (getPageSetting('AutoNatureTokens') && game.global.world > 229) autoNatureTokens();
 		if (getPageSetting('autoenlight') && game.global.world > 229 && game.global.uberNature == false) autoEnlight();
-		if (getPageSetting('BuyUpgradesNew') != 0) buyUpgrades();
+		
 
 		if (getPageSetting('UseAutoGen') == true) autoGenerator();
 
