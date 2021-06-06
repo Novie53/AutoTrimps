@@ -758,7 +758,7 @@ function autoMap() {
         var doDefaultMapBonus = game.global.mapBonus < getPageSetting('MaxMapBonuslimit') - 1;
         if (selectedMap == game.global.currentMapId && !getCurrentMapObject().noRecycle && (doDefaultMapBonus || vanillaMapatZone || doMaxMapBonus || shouldFarm || needPrestige || shouldDoSpireMaps || mapExiting)) {
             //Start with Repeat on
-            console.log("debug0");
+            //console.log("debug0");
             if (!game.global.repeatMap) {
                 repeatClicked();
             }
