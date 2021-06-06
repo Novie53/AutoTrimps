@@ -1,6 +1,5 @@
-var ATversion = 'ZekRay v6.0';
 var atscript = document.getElementById('AutoTrimps-script');
-var basepath = 'https://Psycho-Ray.github.io/AutoTrimps/', modulepath='modules/';
+var basepath = 'https://novie53.github.io/AutoTrimps/', modulepath='modules/';
 atscript !== null && (basepath = atscript.src.replace(/AutoTrimps2\.js$/,''));
 
 function ATscriptLoad(a,b) {
@@ -63,7 +62,7 @@ setTimeout(delayStart, startupDelay);
 
 function delayStart() {
     initializeAutoTrimps();
-    printChangelog();
+    //printChangelog();
     setTimeout(delayStartAgain, startupDelay);
 }
 
@@ -91,6 +90,7 @@ function delayStartAgain(){
     }
 }*/
 
+var ATversion = "Nov 1.0.1";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
