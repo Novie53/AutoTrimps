@@ -215,7 +215,7 @@ function AT_buyStorage() {
 		'Forge': 'metal'
 	};
 	for (let storageBuilding in AT_Constants.ResourcerStorageList) {
-		if (!game.triggers[B].done) continue;
+		if (!game.triggers[storageBuilding].done) continue;
 		let jest = 0;
 		let owned = game.resources[AT_Constants.ResourcerStorageList[storageBuilding]].owned;
 		let max = game.resources[AT_Constants.ResourcerStorageList[storageBuilding]].max * packMod;
