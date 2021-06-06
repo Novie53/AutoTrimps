@@ -107,7 +107,6 @@ var ATMODULES = {};
 var ATmoduleList = [];
 
 var bestBuilding;
-var scienceNeeded;
 var RscienceNeeded;
 var breedFire = false;
 
@@ -173,14 +172,14 @@ function mainLoop() {
 	if (game.global.universe == 1){
 
 		//Offline Progress
-		if (!usingRealTimeOffline) { 
-			setScienceNeeded();
+		if (!usingRealTimeOffline) {
 			autoLevelEquipment();
 		}
 
 		///////// Core //////////
 		//Gather
 		if (getPageSetting("ManualGather2") > 0) AT_gather();
+		if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
 		//Buildings
 		if (getPageSetting('BuyBuildingsNew') == 1) { AT_buyBuildings(); AT_buyStorage(); }
 		else if (getPageSetting('BuyBuildingsNew') == 2) AT_buyBuildings();
@@ -195,7 +194,6 @@ function mainLoop() {
 		
 		if (getPageSetting('AutoMaps') > 0 && game.global.mapsUnlocked) autoMap();
 		if (getPageSetting('showautomapstatus') == true) updateAutoMapsStatus();
-		if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
 		if (getPageSetting('ATGA2') == true) ATGA2();
 		if (aWholeNewWorld && getPageSetting('AutoRoboTrimp')) autoRoboTrimp();
 		if (game.global.challengeActive == "Daily" && getPageSetting('buyheliumy') >= 1 && getDailyHeliumValue(countDailyWeight()) >= getPageSetting('buyheliumy') && game.global.b >= 100 && !game.singleRunBonuses.heliumy.owned) purchaseSingleRunBonus('heliumy');

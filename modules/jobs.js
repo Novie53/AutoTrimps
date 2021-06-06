@@ -20,7 +20,7 @@ function AT_safeBuyFireJob (jobName, amount, allowAutoFire) {
 	if (!Number.isInteger(amount)) {
 		throw "Error, not valid amount input: \"" + amount + "\"";
 	}
-	if (amount === 0 || !(jobName in game.jobs)) { return; }
+	if (amount === 0 || !(jobName in game.jobs) || game.jobs[jobName].locked) { return; }
 	
 	let old = preBuy2();
 	if (amount < 0) {
@@ -42,7 +42,7 @@ function AT__FireJob(jobName, amount) {
 	if (amount >= 1) {
 		game.global.firing = true;
 		game.global.buyAmt = amount;
-		debug("Firing " + prettify(amount) + ' ' + jobName + 's', "jobs", "*users");
+		debug("Firing " + prettify(amount) + ' ' + jobName + (amount > 1 ? "s" : ""), "jobs", "*users");
 		buyJob(jobName, true, true);
 	
 	
@@ -108,7 +108,7 @@ function AT__BuyJob(jobName, amount, allowAutoFire) {
 	if (amount >= 1) {
 		game.global.firing = false;
 		game.global.buyAmt = amount;
-		debug("Hiring " + prettify(game.global.buyAmt) + ' ' + jobName + 's', "jobs", "*users");
+		debug("Hiring " + prettify(game.global.buyAmt) + ' ' + jobName + (amount > 1 ? "s" : ""), "jobs", "*users");
 		buyJob(jobName, true, true);
 	
 		if ((debug_TrimpsBefore + game.global.buyAmt) != game.jobs[jobName].owned) {
@@ -201,7 +201,7 @@ function AT_buyJobs_LessThree() {
 			AT_safeBuyFireJob('Trainer', 1, true);
 	}
 	
-	if (getPageSetting('MaxExplorers') > game.jobs.Explorer.owned || getPageSetting('MaxExplorers') == -1) {
+	if (!game.jobs.Explorer.locked && (getPageSetting('MaxExplorers') > game.jobs.Explorer.owned || getPageSetting('MaxExplorers') == -1)) {
 		AT_safeBuyFireJob('Explorer', 1, true);
 	}
 }
