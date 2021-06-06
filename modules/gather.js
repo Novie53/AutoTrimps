@@ -1,7 +1,122 @@
-//updated
 MODULES["gather"] = {};
-//These can be changed (in the console) if you know what you're doing:
-MODULES["gather"].minScienceSeconds = 60;
+MODULES.gather.minScienceSeconds = 60;
+MODULES.gather.minTraps = 5;
+
+
+
+
+
+
+
+
+
+
+
+// canAffordBuilding
+// AT_scienceCurrentlyNeeded
+// getPlayerModifier
+// getPerSecBeforeManual
+// AT_Constants
+
+
+function AT_gather() {
+	let lowOnTraps = game.buildings.Trap.owned < MODULES.gather.minTraps;
+	let notFullPop = game.resources.trimps.owned < game.resources.trimps.realMax();
+	let InTrapperChallenge = game.global.challengeActive == "Trapper";
+
+	
+	//FRESH GAME LOWLEVEL NOHELIUM CODE.
+	if (game.global.world == 1 && !canAffordBuilding('Trap') && game.global.buildingsQueue.length == 0 && game.buildings.Trap.owned == 0) {
+		if (!game.triggers.wood.done || game.resources.food.owned < 10 || Math.floor(game.resources.food.owned) < Math.floor(game.resources.wood.owned))
+			setGather('food');
+		else
+			setGather('wood');
+		return;
+	}
+
+
+	//Traps and Trimps:
+	if (autoTrimpSettings.TrapTrimps.enabled && game.buildings.Trap.owned > 0 && notFullPop) {
+		setGather('trimps');
+		return;
+	}
+	if (autoTrimpSettings.TrapTrimps.enabled && lowOnTraps)
+		AT_safeBuyBuilding('Trap', 10);
+
+
+	//Buildings:
+	if ((game.global.buildingsQueue.length >= 1 && !bwRewardUnlocked("Foremany") &&
+	   !(game.global.buildingsQueue.length == 1 && game.global.buildingsQueue[0] == 'Trap.1')) ||
+		(autoTrimpSettings.TrapTrimps.enabled && lowOnTraps && notFullPop))	{
+		setGather('buildings');
+		return;
+	}
+
+
+	//Science:
+	//if we have some upgrades sitting around which we don't have enough science for, gather science
+	if (document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') {
+		if ((game.resources.science.owned < 100 || (game.resources.science.owned < AT_scienceCurrentlyNeeded() && (getPlayerModifier() * 5) > getPerSecBeforeManual('Scientist')))
+			 && getPageSetting('ManualGather2') != 2) {
+			setGather('science');
+			return;
+		}
+	}
+
+
+	if (game.global.turkimpTimer > 0) {
+		setGather('metal');
+	}
+	else {
+		let lowestResource = "";
+		let lowestResourceRate = -1;
+		for (let resource in AT_Constants.ManualResourceList) {
+			if (document.getElementById(resource).style.visibility == "hidden") continue;
+			
+			let currentRate = game.jobs[AT_Constants.ManualResourceList[resource]].owned * game.jobs[AT_Constants.ManualResourceList[resource]].modifier;
+			if (currentRate < lowestResourceRate || lowestResourceRate == -1) {
+				lowestResourceRate = currentRate;
+				lowestResource = resource;
+			}
+		}
+		setGather(lowestResource);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //Global flags
 var trapBuffering = false, maxTrapBuffering = false;
@@ -185,6 +300,10 @@ function autogather3() {
 	if (getPageSetting('gathermetal') == true || game.global.buildingsQueue.length <= 1) setGather('metal');
 	else setGather('buildings')
 }
+
+
+
+
 
 //RGather
 
