@@ -1075,6 +1075,29 @@ function calcCurrentStance() {
     }
 }
 
+
+
+function AT_scienceNeeded() {
+	var amount = 0;
+	for (var upgrade in AT_Constants.UpgradeList) {
+		upgrade = AT_Constants.UpgradeList[upgrade];
+		if (game.upgrades[upgrade].allowed > game.upgrades[upgrade].done) { //If the upgrade is available
+			amount += getScienceCostToUpgrade(upgrade);
+		}
+	}
+	return amount;
+}
+
+function AT_canAffordJob(jobName, amount) {
+    for (var costItem in game.jobs[jobName].cost) {
+        if (checkJobItem(jobName, false, costItem, null, amount) !== true) return false;
+    }
+	return true;
+}
+
+
+
+
 //Radon
 function RgetCritMulti() {
 

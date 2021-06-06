@@ -31,6 +31,8 @@ function initializeAutoTrimps() {
 	debug('AutoTrimps v' + ATversion + ' Loaded!', '*spinner3');
 }
 
+
+/*
 var changelogList = [];
 changelogList.push({date: "09/05/2021", version: "v5.0.0", description: "<b>v6.0.0</b> Psycho-Ray (Nevereth) here. This is a big overhaul for U1 :) ", isNew: true});
 changelogList.push({date: "15/09/2020", version: "v4.4.1", description: "<b>v5.4.0</b> Fixed things. Check your TF settings U2 people i added a toggle", isNew: false});
@@ -60,6 +62,8 @@ function printChangelog() {
 	,   hideCancel = true;
 	tooltip('confirm', null, 'update', body+footer, action, title, acceptBtnText, null, hideCancel);
 }
+*/
+
 
 var runInterval = 100;		//How often to loop through logic
 var startupDelay = 2500;	//How long to wait for everything to load
@@ -82,10 +86,12 @@ function delayStartAgain(){
 	guiLoopInterval = setInterval(guiLoop, runInterval*10);
 }
 
-//1.0.2
+
+//1.0.2		More imports
+//1.0.3		Think I have Completly imported gather.js
 
 
-var ATversion = "1.0.2";
+var ATversion = "1.0.3";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -169,11 +175,11 @@ function mainLoop() {
 		}
 
 		//Core
+		if (getPageSetting("ManualGather2") > 0) AT_gather();
+		
 		if (getPageSetting('AutoMaps') > 0 && game.global.mapsUnlocked) autoMap();
 		if (getPageSetting('showautomapstatus') == true) updateAutoMapsStatus();
-		if (getPageSetting('ManualGather2') == 1) manualLabor2();
 		if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
-		if (getPageSetting('ManualGather2') == 2) autogather3();
 		if (getPageSetting('ATGA2') == true) ATGA2();
 		if (aWholeNewWorld && getPageSetting('AutoRoboTrimp')) autoRoboTrimp();
 		if (game.global.challengeActive == "Daily" && getPageSetting('buyheliumy') >= 1 && getDailyHeliumValue(countDailyWeight()) >= getPageSetting('buyheliumy') && game.global.b >= 100 && !game.singleRunBonuses.heliumy.owned) purchaseSingleRunBonus('heliumy');
