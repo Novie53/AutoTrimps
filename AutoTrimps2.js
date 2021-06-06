@@ -90,9 +90,10 @@ function delayStartAgain(){
 //1.0.2		More imports
 //1.0.3		Think I have Completly imported gather.js
 //1.0.4		Importing buildings.js (50% done)
+//1.0.5		Importing buildings.js (100% done)
 
 
-var ATversion = "1.0.4";
+var ATversion = "1.0.5";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -176,7 +177,13 @@ function mainLoop() {
 		}
 
 		//Core
+		//Gather
 		if (getPageSetting("ManualGather2") > 0) AT_gather();
+		//Buildings
+		if (getPageSetting('BuyBuildingsNew') == 1) { AT_buyBuildings(); AT_buyStorage(); }
+		else if (getPageSetting('BuyBuildingsNew') == 2) AT_buyBuildings();
+		else if (getPageSetting('BuyBuildingsNew') == 3) AT_buyStorage();
+		
 		
 		if (getPageSetting('AutoMaps') > 0 && game.global.mapsUnlocked) autoMap();
 		if (getPageSetting('showautomapstatus') == true) updateAutoMapsStatus();
@@ -190,14 +197,6 @@ function mainLoop() {
 		if (getPageSetting('autoenlight') && game.global.world > 229 && game.global.uberNature == false) autoEnlight();
 		if (getPageSetting('BuyUpgradesNew') != 0) buyUpgrades();
 
-		//Buildings
-		if (getPageSetting('BuyBuildingsNew') === 0 && getPageSetting('hidebuildings') == true) buyBuildings();
-		else if (getPageSetting('BuyBuildingsNew') == 1) {
-			buyBuildings();
-			buyStorage();
-		}
-		else if (getPageSetting('BuyBuildingsNew') == 2) buyBuildings();
-		else if (getPageSetting('BuyBuildingsNew') == 3) buyStorage();
 		if (getPageSetting('UseAutoGen') == true) autoGenerator();
 
 		//Jobs

@@ -5,13 +5,6 @@ MODULES.buildings.storageLowlvlCutoff2 = 0.5; //when to buy more storage from zo
 MODULES.buildings.gatewayWall = 1000; //Will only buy gateway when the cost of the gateway is lower than 1/x of the total fragments
 
 
-//Psycho-Ray
-MODULES["buildings"].nurseryWall = 10;
-MODULES["buildings"].nurserySpireWall = 10;
-MODULES["buildings"].advancedNurseries = true; //Use on Magma. HIGHLY EXPERIMENTAL
-
-
-
 function AT_safeBuyBuilding(building, amount = 1) {
 	if (!Number.isInteger(amount)) {
 		throw "Error, not valid amount input: \"" + amount + "\"";
@@ -143,36 +136,15 @@ function AT_buyGemEfficientHousing() {
 	}
 }
 
-
-
-
-
-function advancedNurseries() {
-	//Only build nurseries if: A) Lacking Health & B) Not lacking Damage & C&D) Has max Map Stacks E) Has at least 1 Map Stack F) Not farming Spire or advN is off
-	//Also, it requires less health during spire
-	var a = calcHealthRatio(false, true) < getMapHealthCutOff();
-	var b = calcHDRatio() < getFarmCutOff() || weaponCapped;
-	var c = game.global.mapBonus >= getPageSetting('MaxMapBonushealth');
-	var d = game.global.mapBonus >= getPageSetting('MaxMapBonuslimit') || calcHDRatio() < getMapCutOff();
-	var e = game.global.mapBonus >= 1 || getPageSetting('MaxMapBonuslimit') == 0 || getPageSetting('MaxMapBonushealth') == 0;
-	var f = !preSpireFarming || !MODULES.buildings.advancedNurseries;
-	var off = !MODULES["buildings"].advancedNurseries || game.stats.highestLevel.valueTotal() < 230;
-	return off || (a && b && c && d && e && f);
-}
-
-function buyBuildings() {
-	if ((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist")) return;
-	var customVars = MODULES["buildings"];
-	var oldBuy = preBuy2();
-	var hidebuild = (getPageSetting('BuyBuildingsNew')===0 && getPageSetting('hidebuildings')==true);
-	game.global.buyAmt = 1;
-	if (!hidebuild) {
-	AT_buyFoodEfficientHousing();
-	AT_buyGemEfficientHousing();
-  	}
-	if (!hidebuild && getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole') && !game.buildings.Wormhole.locked) {
-		AT_safeBuyBuilding('Wormhole');
-	}
+function AT_buyBuildings() {
+	if ((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist"))
+		return;
+	AT_buyFoodEfficientHousing();  //["Hut", "House", "Mansion", "Hotel", "Resort"];
+	AT_buyGemEfficientHousing();   //["Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
+	if (!game.buildings.Wormhole.locked && getPageSetting('MaxWormhole') > 0)
+		AT_safeBuyBuilding('Wormhole', getPageSetting('MaxWormhole') - game.buildings.Wormhole.owned);
+	if (!game.buildings.Tribute.locked)
+		AT_safeBuyBuilding('Tribute', getPageSetting('MaxTribute') == -1 ? 10 : getPageSetting('MaxTribute') - game.buildings.Tribute.owned);
 
 	//Gyms:
 	if (!game.buildings.Gym.locked && (getPageSetting('MaxGym') > game.buildings.Gym.owned || getPageSetting('MaxGym') == -1)) {
@@ -215,61 +187,55 @@ function buyBuildings() {
 		}
 	
 		//Buy Gym
-		if (!needGymystic && !skipGym) AT_safeBuyBuilding('Gym');
+		if (!needGymystic && !skipGym)
+			AT_safeBuyBuilding('Gym');
 	   	needGymystic = false;
 	}
 	
-	//Tributes:
-	if (!game.buildings.Tribute.locked && !hidebuild && (getPageSetting('MaxTribute') > game.buildings.Tribute.owned || getPageSetting('MaxTribute') == -1))
-		AT_safeBuyBuilding('Tribute');
-	
-	//Nurseries Init
-	var nurseryZoneOk = game.global.world >= getPageSetting('NoNurseriesUntil');
-	var maxNurseryOk = getPageSetting('MaxNursery') < 0 || game.buildings.Nursery.owned < getPageSetting('MaxNursery');
-
-	var spireNurseryActive = game.global.challengeActive != "Daily" && (game.global.world > 200 && isActiveSpireAT() || game.global.world <= 200 && getPageSetting('IgnoreSpiresUntil') <= 200);
-	var nurseryPreSpire = spireNurseryActive && game.buildings.Nursery.owned < getPageSetting('PreSpireNurseries');
-
-	var dailySpireNurseryActive = game.global.challengeActive == "Daily" && (disActiveSpireAT() || game.global.world <= 200 && getPageSetting('dIgnoreSpiresUntil') <= 200);
-	var dailyNurseryPreSpire = dailySpireNurseryActive && game.buildings.Nursery.owned < getPageSetting('dPreSpireNurseries');
-
 	//Nurseries
-	if (game.buildings.Nursery.locked == 0 && !hidebuild && (advancedNurseries() && nurseryZoneOk && maxNurseryOk || nurseryPreSpire || dailyNurseryPreSpire)) {
-		//Nursery Wall
-		var nurseryWallpct = MODULES["buildings"].nurseryWall;
-		if (nurseryWallpct <= 1 || getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) * Math.pow(1 - game.portal.Resourceful.modifier, game.portal.Resourceful.level) < (game.resources.gems.owned / nurseryWallpct))
-			AT_safeBuyBuilding('Nursery');
+	if (!game.buildings.Nursery.locked) {
+		let maxNurseAmount = getPageSetting('MaxNursery') == -1 ? 99999 : getPageSetting('MaxNursery');
+		let spireOverride = false;
+		//Spire override
+		if (getPageSetting('PreSpireNurseries') != -1 && isActiveSpireAT()) {
+			maxNurseAmount = getPageSetting('PreSpireNurseries');
+			spireOverride = true;
+		}
+		if (spireOverride || getPageSetting('NoNurseriesUntil') == -1 || game.global.world < getPageSetting('NoNurseriesUntil')) {
+			AT_safeBuyBuilding('Nursery', maxNurseAmount - game.buildings.Nursery.owned);
+		}
 	}
-
-	postBuy2(oldBuy);
 }
 
-function buyStorage() {
-	var customVars = MODULES["buildings"];
-	var packMod = 1 + game.portal.Packrat.level * game.portal.Packrat.modifier;
-	var Bs = {
+function AT_buyStorage() {
+	let packMod = 1 + game.portal.Packrat.level * game.portal.Packrat.modifier;
+	let Bs = {
 		'Barn': 'food',
 		'Shed': 'wood',
 		'Forge': 'metal'
 	};
-	for (var B in Bs) {
-		var jest = 0;
-		var owned = game.resources[Bs[B]].owned;
-		var max = game.resources[Bs[B]].max * packMod;
+	for (let storageBuilding in AT_Constants.ResourcerStorageList) {
+		if (!game.triggers[B].done) continue;
+		let jest = 0;
+		let owned = game.resources[AT_Constants.ResourcerStorageList[storageBuilding]].owned;
+		let max = game.resources[AT_Constants.ResourcerStorageList[storageBuilding]].max * packMod;
 		max = calcHeirloomBonus("Shield", "storageSize", max);
 		if (game.global.mapsActive && game.unlocks.imps.Jestimp) {
-			jest = simpleSeconds(Bs[B], 45);
+			jest = simpleSeconds(AT_Constants.ResourcerStorageList[storageBuilding], 45);
 			jest = scaleToCurrentMap(jest);
 		}
-		if ((game.global.world == 1 && owned > max * customVars.storageLowlvlCutoff1) ||
-			(game.global.world >= 2 && game.global.world < 10 && owned > max * customVars.storageLowlvlCutoff2) ||
-			(owned + jest > max * customVars.storageMainCutoff)) {
-			if (canAffordBuilding(B) && game.triggers[B].done) {
-				AT_safeBuyBuilding(B);
-			}
+		if ((game.global.world == 1 && owned > max * MODULES.buildings.storageLowlvlCutoff1) ||
+			(game.global.world >= 2 && game.global.world < 10 && owned > max * MODULES.buildings.storageLowlvlCutoff2) ||
+			(owned + jest > max * MODULES.buildings.storageMainCutoff)) {
+			AT_safeBuyBuilding(storageBuilding, 1);
 		}
 	}
 }
+
+
+
+
+
 
 
 
