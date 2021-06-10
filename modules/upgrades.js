@@ -10,6 +10,7 @@ function AT_buyUpgrades() {
 		if (!(gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade))) continue;
 		//Will only move past this if the upgrade is available and affordable
 		
+		if (upgrade == "Gymystic") continue; // Gymystic is handled inside equipment.js
 		if (upgrade == 'Coordination' && (getPageSetting('BuyUpgradesNew') == 2 || !canAffordCoordinationTrimps())) continue;
 		//if (upgrade == 'Coordination' && (!canAffordCoordinationTrimps() || (getPageSetting('ultwind') >= 1 && game.global.world >= getPageSetting('ultwind') && HDratioy() < getPageSetting('ultwindcut') && game.global.challengeActive != "Daily"))) continue;
 		//if (upgrade == 'Coordination' && (!canAffordCoordinationTrimps() || (getPageSetting('dultwind') >= 1 && game.global.world >= getPageSetting('dultwind') && HDratioy() < getPageSetting('dultwindcut') && game.global.challengeActive == "Daily"))) continue;

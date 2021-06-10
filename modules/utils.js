@@ -137,7 +137,7 @@ function AT_initializeConstants() {
 	AT_Constants["ManualResourceList"] = {'food': 'Farmer', 'wood': 'Lumberjack', 'metal': 'Miner'};
 	AT_Constants["PrestigeList"] = ["Supershield", "Dagadder", "Megamace", "Polierarm", "Axeidic", "Greatersword", "Harmbalest", "Bootboost", "Hellishmet", "Pantastic", "Smoldershoulder", "Bestplate", "GambesOP"];
 	AT_Constants["PrestigeListWepOnly"] = ["Dagadder", "Megamace", "Polierarm", "Axeidic", "Greatersword", "Harmbalest"];
-	AT_Constants["UpgradeList"] = ['Miners', 'Scientists', 'Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Speedexplorer', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation', 'Shieldblock', 'Potency', 'Magmamancers'];
+	AT_Constants["UpgradeList"] = ['Miners', 'Scientists', 'Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Speedexplorer', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation', 'Shieldblock', 'Potency', 'Magmamancers', "Gymystic"];
 	AT_Constants["FoodHousing"] = ["Hut", "House", "Mansion", "Hotel", "Resort"];
 	AT_Constants["GemHousing"] = ["Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
 	AT_Constants["ResourcerStorageList"] = {'Barn': 'food', 'Shed': 'wood', 'Forge': 'metal'};
