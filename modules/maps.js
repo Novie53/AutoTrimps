@@ -739,11 +739,11 @@ function autoMap() {
 					selectedMap = "create";
 			} else if (siphonMap != -1) {
 				selectedMap = game.global.mapsOwnedArray[siphonMap].id;
-				if (game.global.world >= 59 && MODULES.maps.forceModifier && !game.global.mapsOwnedArray[siphonMap].hasOwnProperty("bonus")) tryBetterMod = true;
+				if (game.global.world >= 60 && MODULES.maps.forceModifier && !game.global.mapsOwnedArray[siphonMap].hasOwnProperty("bonus")) tryBetterMod = true;
 			}
 			else if (altSiphMap != -1) {
 				selectedMap = "create";
-				tryBetterMod = game.global.world >= 59 && MODULES.maps.forceModifier;
+				tryBetterMod = game.global.world >= 60 && MODULES.maps.forceModifier;
 			}
 			else
 				selectedMap = "create";
@@ -979,7 +979,8 @@ function autoMap() {
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			selectMap(selectedMap);
 			var themapobj = game.global.mapsOwnedArray[getMapIndex(selectedMap)];
 			var levelText = " Level: " + themapobj.level;

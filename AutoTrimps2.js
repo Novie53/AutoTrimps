@@ -94,10 +94,11 @@ function delayStartAgain(){
 //1.0.6		Importing upgrades.js
 //1.0.7		Importing jobs.js
 //1.0.8		Added Gymystic to upgrade array so it is calculate inside AT_scienceNeeded
+//1.0.9		Bugfix
 
 
 
-var ATversion = "1.0.8";
+var ATversion = "1.0.9";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
