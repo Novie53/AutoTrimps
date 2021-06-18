@@ -96,7 +96,6 @@ function shouldSpeedRun(achievement) {
 }
 
 function saveSettings(){safeSetItems('autoTrimpSettings',serializeSettings())}
-function debug(a,b,c){var d=getPageSetting('SpamGeneral'),e=getPageSetting('SpamUpgrades'),f=getPageSetting('SpamEquipment'),g=getPageSetting('SpamMaps'),h=getPageSetting('SpamOther'),i=getPageSetting('SpamBuilding'),j=getPageSetting('SpamJobs'),k=getPageSetting('SpamGraphs'),l=getPageSetting('SpamMagmite'),m=getPageSetting('SpamPerks'),n=getPageSetting('SpamProfiles'),o=getPageSetting('SpamNature'),p=!0;switch(b){case null:break;case'general':p=d;break;case'upgrades':p=e;break;case'equips':p=f;break;case'buildings':p=i;break;case'jobs':p=j;break;case'maps':p=g;break;case'other':p=h;break;case'graphs':p=k;break;case'magmite':p=l;break;case'perks':p=m;break;case'profiles':p=n;break;case'nature':p=o;}p&&(enableDebug&&console.log(timeStamp()+' '+a),message2(a,'AutoTrimps',c,b))}
 function timeStamp(){for(var a=new Date,b=[a.getHours(),a.getMinutes(),a.getSeconds()],c=1;3>c;c++)10>b[c]&&(b[c]="0"+b[c]);return b.join(":")}
 function preBuy(){preBuyAmt=game.global.buyAmt,preBuyFiring=game.global.firing,preBuyTooltip=game.global.lockTooltip,preBuymaxSplit=game.global.maxSplit}
 function postBuy(){game.global.buyAmt=preBuyAmt,game.global.firing=preBuyFiring,game.global.lockTooltip=preBuyTooltip,game.global.maxSplit=preBuymaxSplit}
@@ -107,6 +106,58 @@ var lastmessagecount = 1;
 function message2(a,b,c,d){var e=document.getElementById("log"),f=e.scrollTop+10>e.scrollHeight-e.clientHeight,g=ATmessageLogTabVisible?"block":"none",h="";c&&"*"==c.charAt(0)?(c=c.replace("*",""),h="icomoon icon-"):h="glyphicon glyphicon-",game.options.menu.timestamps.enabled&&(a=(1==game.options.menu.timestamps.enabled?getCurrentTime():updatePortalTimer(!0))+" "+a),c&&(a="<span class=\""+h+c+"\"></span> "+a),a="<span class=\"glyphicon glyphicon-superscript\"></span> "+a,a="<span class=\"icomoon icon-text-color\"></span>"+a;var i="<span class='"+b+"Message message "+d+"' style='display: "+g+"'>"+a+"</span>",j=document.getElementsByClassName(b+"Message");if(1<j.length&&-1<j[j.length-1].innerHTML.indexOf(a)){var k=j[j.length-1].innerHTML;lastmessagecount++;var l=k.lastIndexOf(" x");-1!=l&&(j[j.length-1].innerHTML=k.slice(0,l)),j[j.length-1].innerHTML+=" x"+lastmessagecount}else lastmessagecount=1,e.innerHTML+=i;f&&(e.scrollTop=e.scrollHeight),trimMessages(b)}
 var ATbutton=document.createElement('button');ATbutton.innerHTML='AutoTrimps',ATbutton.setAttribute('id','AutoTrimpsFilter'),ATbutton.setAttribute('type','button'),ATbutton.setAttribute('onclick','filterMessage2(\'AutoTrimps\')'),ATbutton.setAttribute('class','btn btn-success logFlt');var tab=document.createElement('DIV');tab.setAttribute('class','btn-group'),tab.setAttribute('role','group'),tab.appendChild(ATbutton),document.getElementById('logBtnGroup').appendChild(tab);
 function filterMessage2(a){var b=document.getElementById("log");displayed=!ATmessageLogTabVisible,ATmessageLogTabVisible=displayed;var c=document.getElementsByClassName(a+"Message"),d=displayed?a:a+" off",e=document.getElementById(a+"Filter");e.innerHTML=d,e.className="",e.className=getTabClass(displayed),displayed=displayed?"block":"none";for(var f=0;f<c.length;f++)c[f].style.display=displayed;b.scrollTop=b.scrollHeight}
+
+
+function debug(message, type, c) {
+	if (!enableDebug) return;
+	let sendDebug = false;
+	
+	switch(type) {
+		case 'general':
+			sendDebug = getPageSetting('SpamGeneral');
+			break;
+		case 'upgrades':
+			sendDebug = getPageSetting('SpamUpgrades');
+			break;
+		case 'equips':
+			sendDebug = getPageSetting('SpamEquipment');
+			break;
+		case 'buildings':
+			sendDebug = getPageSetting('SpamBuilding');
+			break;
+		case 'jobs':
+			sendDebug = getPageSetting('SpamJobs');
+			break;
+		case 'maps':
+			sendDebug = getPageSetting('SpamMaps');
+			break;
+		case 'other':
+			sendDebug = getPageSetting('SpamOther');
+			break;
+		case 'graphs':
+			sendDebug = getPageSetting('SpamGraphs');
+			break;
+		case 'magmite':
+			sendDebug = getPageSetting('SpamMagmite');
+			break;
+		case 'perks':
+			sendDebug = getPageSetting('SpamPerks');
+			break;
+		case 'profiles':
+			sendDebug = getPageSetting('SpamProfiles');
+			break;
+		case 'nature':
+			sendDebug = getPageSetting('SpamNature');
+		default:
+			debugger;
+			break;
+	}
+	
+	if (sendDebug) {
+		console.log(timeStamp() + ' ' + message);
+		message2(message, 'AutoTrimps', c, type);
+	}
+}
 
 function formatMinutesForDescriptions(number){
 	var text;

@@ -89,8 +89,7 @@ function AT_buyGemEfficientHousing() {
 	
 	for (let i = 0; i < buildorder.length; i++) {
 		let bb = buildorder[i];
-		let max = getPageSetting('Max' + bb.name);
-		if (max === false) {max = -1; debugger;}//Does this every happen?
+		let max = bb.name == "Warpstation" ? 9999 : getPageSetting('Max' + bb.name);
 		let buildingsToBuy = max == -1 ? 9999 : max - game.buildings[bb.name].owned;
 		
 		if (buildingsToBuy >= 1) {

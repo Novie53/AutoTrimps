@@ -95,10 +95,11 @@ function delayStartAgain(){
 //1.0.7		Importing jobs.js
 //1.0.8		Added Gymystic to upgrade array so it is calculate inside AT_scienceNeeded
 //1.0.9		Bugfix
+//1.0.10	Bugfix && removal of legacy code
 
 
 
-var ATversion = "1.0.9";
+var ATversion = "1.0.10";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -253,8 +254,8 @@ function mainLoop() {
 		if (((getPageSetting('BWraid') && game.global.challengeActive != "Daily") || (getPageSetting('Dailybwraid') && game.global.challengeActive == "Daily"))) {
 			BWraiding();
 		}
-		if ((getPageSetting('BWraid') == true || getPageSetting('DailyBWraid') == true) && bwraidon) buyWeps();
-		if (game.global.mapsActive && getPageSetting('game.global.universe == 1 && BWraid') == true && game.global.world == getPageSetting('BWraidingz') && getCurrentMapObject().level <= getPageSetting('BWraidingmax')) buyWeps();
+		//if ((getPageSetting('BWraid') == true || getPageSetting('Dailybwraid') == true) && bwraidon) buyWeps();
+		//if (game.global.mapsActive && getPageSetting('game.global.universe == 1 && BWraid') == true && game.global.world == getPageSetting('BWraidingz') && getCurrentMapObject().level <= getPageSetting('BWraidingmax')) buyWeps();
 
 		//Golden
 		var agu = getPageSetting('AutoGoldenUpgrades');
@@ -348,7 +349,7 @@ function mainLoop() {
 		if (((getPageSetting('RBWraid') && game.global.challengeActive != "Daily") || (getPageSetting('RDailybwraid') && game.global.challengeActive == "Daily"))) {
 		RBWraiding()
 		}
-		if ((getPageSetting('RBWraid') == true || getPageSetting('RDailyBWraid') == true) && Rbwraidon) RbuyWeps();
+		if ((getPageSetting('RBWraid') == true || getPageSetting('RDailybwraid') == true) && Rbwraidon) RbuyWeps();
 		if (game.global.mapsActive && getPageSetting('RBWraid') == true && game.global.world == getPageSetting('RBWraidingz') && getCurrentMapObject().level <= getPageSetting('RBWraidingmax')) RbuyWeps();
 	
 	//RHeirlooms

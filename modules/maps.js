@@ -394,10 +394,10 @@ function autoMap() {
 
 	//Shield Calc
 	highDamageShield();
-	if (getPageSetting('loomswap') > 0 && game.global.challengeActive != "Daily" && game.global.ShieldEquipped.name != getPageSetting('highdmg'))
-		ourBaseDamage *= trimpAA;
-	if (getPageSetting('dloomswap') > 0 && game.global.challengeActive == "Daily" && game.global.ShieldEquipped.name != getPageSetting('dhighdmg'))
-		ourBaseDamage *= trimpAA;
+	// if (getPageSetting('loomswap') > 0 && game.global.challengeActive != "Daily" && game.global.ShieldEquipped.name != getPageSetting('highdmg'))
+		// ourBaseDamage *= trimpAA;
+	// if (getPageSetting('dloomswap') > 0 && game.global.challengeActive == "Daily" && game.global.ShieldEquipped.name != getPageSetting('dhighdmg'))
+		// ourBaseDamage *= trimpAA;
 
 	//Check for Health & Damage
 	enoughHealth = calcHealthRatio(false, true) > getMapHealthCutOff();

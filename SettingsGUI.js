@@ -1466,9 +1466,6 @@ function updateCustomButtons() {
     !radonon && getPageSetting('use3daily')==true ? turnOn("dwsmax"): turnOff("dwsmax");
     !radonon && getPageSetting('use3daily')==true ? turnOn("dwsmaxhd"): turnOff("dwsmaxhd");
 
-    //DLoom
-    !radonon && getPageSetting('dloomswap') > 0 ? turnOn('dloomswaphd') : turnOff('dloomswaphd');
-
     //DPortal
     !radonon ? turnOn("AutoStartDaily"): turnOff("AutoStartDaily");
     !radonon ? turnOn("u2daily"): turnOff("u2daily");
