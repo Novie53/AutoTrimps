@@ -42,13 +42,12 @@ function serializeSettings() {
 
 function getPageSetting(setting) {
 	if (autoTrimpSettings.hasOwnProperty(setting) == false) {
-		return false;
+		throw "Unknown setting: \"" + setting + "\"";
 	}
 	if (autoTrimpSettings[setting].type == 'boolean') {
 		return autoTrimpSettings[setting].enabled;
 	} else if (autoTrimpSettings[setting].type == 'multiValue') {
-		return Array.from(autoTrimpSettings[setting].value)
-		.map(x => parseInt(x));
+		return Array.from(autoTrimpSettings[setting].value).map(x => parseInt(x));
 	} else if (autoTrimpSettings[setting].type == 'textValue') {
 		return autoTrimpSettings[setting].value;
 	} else if (autoTrimpSettings[setting].type == 'value' || autoTrimpSettings[setting].type == 'valueNegative') {
@@ -62,7 +61,7 @@ function getPageSetting(setting) {
 
 function setPageSetting(setting, value) {
 	if (autoTrimpSettings.hasOwnProperty(setting) == false) {
-		return false;
+		throw "Unknown setting: \"" + setting + "\"";
 	}
 	if (autoTrimpSettings[setting].type == 'boolean') {
 		autoTrimpSettings[setting].enabled = value;
