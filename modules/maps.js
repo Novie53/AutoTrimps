@@ -137,7 +137,7 @@ function testMapSpecialModController(noLog) {
 				}
 
 				var d = updateMapCost(!0), e = game.resources.fragments.owned;
-				"0" != c.value && !noLog && debug("Set the map special modifier to: " + mapSpecialModifierConfig[c.value].name + ". Cost: " + (100 * (d / e)).toFixed(2) + "% of your fragments.");
+				"0" != c.value && !noLog && debug("Set the map special modifier to: " + mapSpecialModifierConfig[c.value].name + ". Cost: " + (100 * (d / e)).toFixed(2) + "% of your fragments.", "maps");
 			}
 
 			//Check what Modifiers should be available to us

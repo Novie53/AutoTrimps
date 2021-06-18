@@ -184,62 +184,27 @@ function ImportExportTooltip(what, event) {
 			};
 		}
 		costText += "</div>";
-	} else if (what == "Export550") {
-		tooltipText = "This is your AUTOTRIMPS z550+ save string. Use this string to import the settings. <br/><br/><textarea id='exportArea' style='width: 100%' rows='5'>" + serializeSettings550() + "</textarea>";
-		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip()'>Got it</div>";
-		if (document.queryCommandSupported('copy')) {
-			costText += "<div id='clipBoardBtn' class='btn btn-success'>Copy to Clipboard</div>";
-			ondisplay = function() {
-				document.getElementById('exportArea').select();
-				document.getElementById('clipBoardBtn').addEventListener('click', function(event) {
-					document.getElementById('exportArea').select();
-					try {
-						document.execCommand('copy');
-					} catch (err) {
-						document.getElementById('clipBoardBtn').innerHTML = "Error, not copied";
-					}
-				});
-			};
-		}
-	} else if (what == "Export60") {
-		tooltipText = "This is your AUTOTRIMPS z60 save string. Use this string to import the settings. <br/><br/><textarea id='exportArea' style='width: 100%' rows='5'>" + serializeSettings60() + "</textarea>";
-		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip()'>Got it</div>";
-		if (document.queryCommandSupported('copy')) {
-			costText += "<div id='clipBoardBtn' class='btn btn-success'>Copy to Clipboard</div>";
-			ondisplay = function() {
-				document.getElementById('exportArea').select();
-				document.getElementById('clipBoardBtn').addEventListener('click', function(event) {
-					document.getElementById('exportArea').select();
-					try {
-						document.execCommand('copy');
-					} catch (err) {
-						document.getElementById('clipBoardBtn').innerHTML = "Error, not copied";
-					}
-				});
-			};
-	} else {
-			ondisplay = function() {
-				document.getElementById('exportArea').select();
-			};
-		}
-		costText += "</div>";
-	} else if (what == "ImportAutoTrimps") {
+	}
+	else if (what == "ImportAutoTrimps") {
 		tooltipText = "Import your AUTOTRIMPS save string! It'll be fine, I promise.<br/><br/><textarea id='importBox' style='width: 100%' rows='5'></textarea>";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip(); loadAutoTrimps();'>Import</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
 		ondisplay = function() {
 			document.getElementById('importBox').focus();
 		};
-	} else if (what == "spireImport") {
+	}
+	else if (what == "spireImport") {
 		tooltipText = "Import your SPIRE string! <br/><br/><textarea id='importBox' style='width: 100%' rows='5'></textarea>";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip(); tdStringCode2();'>Import</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
 		ondisplay = function() {
 			document.getElementById('importBox').focus();
 		};
-	} else if (what == "CleanupAutoTrimps") {
+	}
+	else if (what == "CleanupAutoTrimps") {
 		cleanupAutoTrimps();
 		tooltipText = "Autotrimps saved-settings have been attempted to be cleaned up. If anything broke, refreshing will fix it, but check that your settings are correct! (prestige in particular)";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip();'>OK</div></div>";
-	} else if (what == "ExportModuleVars") {
+	}
+	else if (what == "ExportModuleVars") {
 		tooltipText = "These are your custom Variables. The defaults have not been included, only what you have set... <br/><br/><textarea id='exportArea' style='width: 100%' rows='5'>" + exportModuleVars() + "</textarea>";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip()'>Got it</div>";
 		if (document.queryCommandSupported('copy')) {
@@ -261,13 +226,15 @@ function ImportExportTooltip(what, event) {
 			};
 		}
 		costText += "</div>";
-	} else if (what == "ImportModuleVars") {
+	}
+	else if (what == "ImportModuleVars") {
 		tooltipText = "Enter your Autotrimps MODULE variable settings to load, and save locally for future use between refreshes:<br/><br/><textarea id='importBox' style='width: 100%' rows='5'></textarea>";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip(); importModuleVars();'>Import</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
 		ondisplay = function() {
 			document.getElementById('importBox').focus();
 		};
-	} else if (what == "ATModuleLoad") {
+	}
+	else if (what == "ATModuleLoad") {
 		var mods = document.getElementById('ATModuleListDropdown');
 		var modnames = "";
 		for (script in mods.selectedOptions) {
@@ -279,7 +246,8 @@ function ImportExportTooltip(what, event) {
 		}
 		tooltipText = "Autotrimps - Loaded the MODULE .JS File(s): " + modnames;
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip();'>OK</div></div>";
-	} else if (what == "ATModuleUnload") {
+	}
+	else if (what == "ATModuleUnload") {
 		var mods = document.getElementById('ATModuleListDropdown');
 		var modnames = "";
 		for (script in mods.selectedOptions) {
@@ -291,14 +259,17 @@ function ImportExportTooltip(what, event) {
 		}
 		tooltipText = "Autotrimps - UnLoaded the MODULE .JS File(s): " + modnames;
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip();'>OK</div></div>";
-	} else if (what == "ResetModuleVars") {
+	}
+	else if (what == "ResetModuleVars") {
 		resetModuleVars();
 		tooltipText = "Autotrimps MODULE variable settings have been successfully reset to its defaults!";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip();'>OK</div></div>";
-	} else if (what == 'MagmiteExplain') {
+	}
+	else if (what == 'MagmiteExplain') {
 		tooltipText = "<img src='" + basepath + "mi.png'>";
 		costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip();'>Thats all the help you get.</div></div>";
-	} else if (what == 'c2table') {
+	}
+	else if (what == 'c2table') {
 		var c2list = {
 	Size: {
 		number: 1,

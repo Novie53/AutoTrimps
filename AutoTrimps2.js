@@ -3,7 +3,7 @@ var basepath = "https://novie53.github.io/AutoTrimps/", modulepath="modules/";
 //if (atscript !== null) basepath = atscript.src.replace(/AutoTrimps2\.js$/,'');
 
 function ATscriptLoad(pathname, modulename) {
-	if (modulename == null) debug("Wrong Syntax. Script could not be loaded. Try ATscriptLoad(modulepath, 'example.js'); ");
+	if (modulename == null) debug("Wrong Syntax. Script could not be loaded. Try ATscriptLoad(modulepath, 'example.js');", "all");
 	let script = document.createElement('script');
 	if (pathname == null) pathname = '';
 	script.src = basepath + pathname + modulename + '.js';
@@ -14,7 +14,7 @@ function ATscriptUnload(id) {
 	let $link = document.getElementById(id + '_MODULE');
 	if (!$link) return;
 	document.head.removeChild($link);
-	debug("Removing " + id + "_MODULE","other");
+	debug("Removing " + id + "_MODULE", "all");
 }
 
 ATscriptLoad(modulepath, 'utils');
@@ -28,41 +28,9 @@ function initializeAutoTrimps() {
 	for (let m in ATmoduleList) {
 		ATscriptLoad(modulepath, ATmoduleList[m]);
 	}
-	debug('AutoTrimps v' + ATversion + ' Loaded!', '*spinner3');
+	debug('AutoTrimps v' + ATversion + ' Loaded!', "all", "*spinner3");
 }
 
-
-/*
-var changelogList = [];
-changelogList.push({date: "09/05/2021", version: "v5.0.0", description: "<b>v6.0.0</b> Psycho-Ray (Nevereth) here. This is a big overhaul for U1 :) ", isNew: true});
-changelogList.push({date: "15/09/2020", version: "v4.4.1", description: "<b>v5.4.0</b> Fixed things. Check your TF settings U2 people i added a toggle", isNew: false});
-changelogList.push({date: "06/09/2020", version: "v4.4.0", description: "<b>v5.4.0</b> There is not enough space to describe how much stuff has changed. But its got all 5.4 content ready. <b>CHANGED THE WAY JOBS\, GEAR\, BUILDINGS WORKS! CHECK SETTINGS!</b> ", isNew: false});
-changelogList.push({date: "28/05/2020", version: "v4.3.2", description: "<b>v5.3.8</b> Various bug fixes. <b>CHANGED THE WAY TF GATHER WORKS! CHECK TF SETTINGS!</b> ", isNew: false});
-changelogList.push({date: "08/05/2020", version: "v4.3.1", description: "<b>v5.3.7</b> Various bug fixes. <b>CHANGED THE WAY MELTING POINT SETTING WORKS PLEASE CHECK SETTING IN MAPS!</b> ", isNew: false});
-//changelogList.push({date: "20/02/2020", version: "v4.3.0", description: "<b>v5.3.0</b> Added Arch. Automated Quest. Fixed bugs. Updated calc. ", isNew: false});
-//changelogList.push({date: "22/11/2019", version: "v4.2.0", description: "<b>v5.2.1</b> Added Quagmire functionality. Added time and tribute farming. Added option to run Dailies in either universe. Added check to c2runner to not run a challenge if you have not unlocked it. Autoallocation sort of fixed. Added Greed to loot dumping. Graphs are still bad when moving between universes. Removed autonu due to being broken. ", isNew: false});
-//changelogList.push({date: "25/08/2019", version: "v4.1.0", description: "<b>v5.1.0</b> <b>CHECK COMBAT FOR BETTERAUTOFIGHT, IF MIGHT BE A BLACK BAR, CLICK IT!</b> A bunch of U2 stuff added, offline progress still being worked on. ", isNew: false});
-//changelogList.push({date: "05/08/2019", version: "v4.0.0", description: "<b>v5.0.0</b> U2 added. It works, mostly. ", isNew: true});
-
-function assembleChangelog(a,b,c,d){return d?`<b class="AutoEggs">${a} ${b} </b><b style="background-color:#32CD32"> New:</b> ${c}<br>`:`<b>${a} ${b} </b> ${c}<br>`}
-function printChangelog() {
-	var body="";
-	for (var i in changelogList) {
-		var $item = changelogList[i];
-		var result = assembleChangelog($item.date,$item.version,$item.description,$item.isNew);
-		body+=result;
-	}
-	var footer =
-		'<b>ZӘK Fork</b> - <u>Report any bugs/problems please</u>!\
-		<br>Talk with the dev: <b>Zek#0647</b> @ <a target="#" href="https://discord.gg/Ztcnfjr">Zeks Discord Channel</a>\
-		<br>See <a target="#" href="https://github.com/Zorn192/AutoTrimps/blob/gh-pages/README.md">ReadMe</a> Or check <a target="#" href="https://github.com/Zorn192/AutoTrimps/commits/gh-pages" target="#">the commit history</a> (if you want).'
-	,   action = 'cancelTooltip()'
-	,   title = 'Script Update Notice<br>' + ATversion
-	,   acceptBtnText = "Thank you for playing AutoTrimps. Accept and Continue."
-	,   hideCancel = true;
-	tooltip('confirm', null, 'update', body+footer, action, title, acceptBtnText, null, hideCancel);
-}
-*/
 
 
 var runInterval = 100;		//How often to loop through logic
@@ -96,10 +64,11 @@ function delayStartAgain(){
 //1.0.8		Added Gymystic to upgrade array so it is calculate inside AT_scienceNeeded
 //1.0.9		Bugfix
 //1.0.10	Bugfix && removal of legacy code
+//1.0.11	Bugfix && removal of legacy code
 
 
 
-var ATversion = "1.0.10";
+var ATversion = "1.0.11";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
