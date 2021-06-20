@@ -28,7 +28,7 @@ function autoPortal() {
                     OKtoPortal = false;
                 if (OKtoPortal && zonePostpone == 0) {
                     zonePostpone += 1;
-                    debug("My HeliumHr was: " + myHeliumHr + " & the Best HeliumHr was: " + bestHeHr + " at zone: " + bestHeHrZone, "portal");
+                    debug("My HeliumHr was: " + myHeliumHr + " & the Best HeliumHr was: " + bestHeHr + " at zone: " + bestHeHrZone, "general");
                     cancelTooltip();
                     tooltip('confirm', null, 'update', '<b>Auto Portaling NOW!</b><p>Hit Delay Portal to WAIT 1 more zone.', 'zonePostpone+=1', '<b>NOTICE: Auto-Portaling in 5 seconds....</b>', 'Delay Portal');
                     setTimeout(cancelTooltip, MODULES["portal"].timeout);
@@ -97,7 +97,7 @@ function dailyAutoPortal() {
                 OKtoPortal = false;
             if (OKtoPortal && zonePostpone == 0) {
                 zonePostpone += 1;
-                debug("My HeliumHr was: " + myHeliumHr + " & the Best HeliumHr was: " + bestHeHr + " at zone: " + bestHeHrZone, "portal");
+                debug("My HeliumHr was: " + myHeliumHr + " & the Best HeliumHr was: " + bestHeHr + " at zone: " + bestHeHrZone, "general");
                 cancelTooltip();
                 tooltip('confirm', null, 'update', '<b>Auto Portaling NOW!</b><p>Hit Delay Portal to WAIT 1 more zone.', 'zonePostpone+=1', '<b>NOTICE: Auto-Portaling in 5 seconds....</b>', 'Delay Portal');
                 setTimeout(cancelTooltip, MODULES["portal"].timeout);
@@ -257,14 +257,14 @@ function doPortal(challenge) {
 	        if (!done) break;
 	    }
         if (lastUndone == 1) {
-            debug("All available Dailies already completed.", "portal");
+            debug("All available Dailies already completed.", "general");
 	        if ((getPageSetting('u1daily') == true && portalUniverse == 1 && challenge == autoTrimpSettings.RdHeliumHourChallenge.selected) || (getPageSetting('u2daily') == true && portalUniverse == 2)) {
 	            swapPortalUniverse();
 	        }
 	        selectChallenge(challenge || 0);
         } else {
             getDailyChallenge(lastUndone);
-            debug("Portaling into Daily for: " + getDailyTimeString(lastUndone, true) + " now!", "portal");
+            debug("Portaling into Daily for: " + getDailyTimeString(lastUndone, true) + " now!", "general");
         }
     }
     else if(portalWindowOpen && challenge && c2done) {
