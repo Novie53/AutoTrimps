@@ -59,8 +59,6 @@ function autoPortal() {
         case "Crushed":
         case "Nom":
         case "Toxicity":
-            if (getPageSetting('MaxTox'))
-                settingChanged("MaxTox");
         case "Watch":
         case "Lead":
         case "Corrupted":
