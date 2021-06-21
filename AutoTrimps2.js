@@ -29,22 +29,16 @@ function initializeAutoTrimps() {
 		ATscriptLoad(modulepath, ATmoduleList[m]);
 	}
 	debug('AutoTrimps v' + ATversion + ' Loaded!', "all", "*spinner3");
+	setTimeout(delayStartAgain, 4000);
 }
 
 
 
 var runInterval = 100;		//How often to loop through logic
-var startupDelay = 2500;	//How long to wait for everything to load
 var mainLoopInterval;
 var guiLoopInterval;
 
-setTimeout(delayStart, startupDelay);
-
-function delayStart() {
-	initializeAutoTrimps();
-	//printChangelog();
-	setTimeout(delayStartAgain, startupDelay);
-}
+setTimeout(initializeAutoTrimps(), 1000);
 
 function delayStartAgain(){
 	game.global.addonUser = true;
