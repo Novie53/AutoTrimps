@@ -1,7 +1,6 @@
 MODULES["portal"] = {};
 MODULES["portal"].timeout = 5000;
 MODULES["portal"].bufferExceedFactor = 5;
-var portalzone = getPageSetting('CustomAutoPortal');
 var zonePostpone = 0;
 
 function autoPortal() {
