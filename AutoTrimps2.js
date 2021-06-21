@@ -17,7 +17,8 @@ function ATscriptUnload(id) {
 	debug("Removing " + id + "_MODULE", "all");
 }
 
-function initializeAutoTrimps() {
+
+function AT_initializeAutoTrimps() {
 	loadPageVariables();				//get autoTrimpSettings
 	ATscriptLoad('','SettingsGUI');		//populate Settings GUI
 	ATscriptLoad('','Graphs');			//populate Graphs
@@ -26,22 +27,19 @@ function initializeAutoTrimps() {
 	for (let m in ATmoduleList) {
 		ATscriptLoad(modulepath, ATmoduleList[m]);
 	}
+	document.getElementById(ATmoduleList[ATmoduleList.length - 1] + "_MODULE").onload = () => {setTimeout(AT_startInterval, 2000);}
 	debug('AutoTrimps v' + ATversion + ' Loaded!', "all", "*spinner3");
-	setTimeout(delayStartAgain, 4000);
 }
 
 
-
-
-var runInterval = 100;		//How often to loop through logic
+var runInterval = 100;
 var mainLoopInterval;
 var guiLoopInterval;
 
 ATscriptLoad(modulepath, 'utils');
-document.getElementById("utils_MODULE").onload = () => {initializeAutoTrimps();}
-//setTimeout(initializeAutoTrimps(), 1000);
+document.getElementById("utils_MODULE").onload = () => {AT_initializeAutoTrimps();}
 
-function delayStartAgain(){
+function AT_startInterval(){
 	game.global.addonUser = true;
 	game.global.autotrimps = true;
 	MODULESdefault = JSON.parse(JSON.stringify(MODULES));
@@ -72,7 +70,6 @@ var autoTrimpSettings = {};
 var MODULES = {};
 var MODULESdefault = {};
 var ATMODULES = {};
-var ATmoduleList = [];
 
 var bestBuilding;
 var RscienceNeeded;
