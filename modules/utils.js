@@ -138,7 +138,7 @@ function debug(message, type, c) {
 		case 'perks':
 			sendDebug = getPageSetting('SpamPerks');
 			break;
-		case 'profiles':
+		case 'profile':
 			sendDebug = getPageSetting('SpamProfiles');
 			break;
 		case 'nature':
