@@ -2029,7 +2029,6 @@ function updateCustomButtons() {
     if (game.global.universe == 2 && getPageSetting('RDisableFarm') <= 0)
         RshouldFarm = false;
 
-    MODULES["maps"] && (MODULES["maps"].preferGardens = !getPageSetting('PreferMetal'));
     if (document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) {
         document.getElementById('Prestige').selectedIndex = 11;
         autoTrimpSettings.Prestige.selected = "Bestplate";

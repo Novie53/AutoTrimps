@@ -8,7 +8,6 @@ MODULES.maps.MapTier0Sliders = [9,9,9,"Mountain"];
 MODULES.maps.MapTier1Sliders = [9,9,9,"Depths"];
 MODULES.maps.MapTier2Sliders = [9,9,9,"Random"];
 MODULES.maps.MapTier3Sliders = [9,9,9,"Random"];
-MODULES.maps.preferGardens = !getPageSetting("PreferMetal");
 MODULES.maps.SpireFarm199Maps = true;
 MODULES.maps.shouldFarmCell = 80;
 MODULES.maps.SkipNumUnboughtPrestiges = 2;
@@ -727,7 +726,7 @@ function autoMap() {
 				selectedMap = "create";
 				for (i = 0; i < keysSorted.length; i++) {
 					if (game.global.mapsOwnedArray[keysSorted[i]].level >= spiremaplvl &&
-						game.global.mapsOwnedArray[keysSorted[i]].location == ((customVars.preferGardens && game.global.decayDone) ? 'Plentiful' : 'Mountain')) {
+						game.global.mapsOwnedArray[keysSorted[i]].location == ((!getPageSetting("PreferMetal") && game.global.decayDone) ? 'Plentiful' : 'Mountain')) {
 						selectedMap = game.global.mapsOwnedArray[keysSorted[i]].id;
 						break;
 					}

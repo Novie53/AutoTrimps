@@ -1,6 +1,5 @@
 MODULES["equipment"] = {};
 MODULES["equipment"].capDivisor = 10;
-MODULES["equipment"].alwaysLvl2 = getPageSetting('always2');
 MODULES["equipment"].waitTill60 = true;
 MODULES["equipment"].equipHealthDebugMessage = false;
 
