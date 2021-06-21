@@ -58,10 +58,11 @@ function AT_startInterval(){
 //1.0.9		Bugfix
 //1.0.10	Bugfix && removal of legacy code
 //1.0.11	Bugfix && removal of legacy code
+//1.0.12	Bugfix
 
 
 
-var ATversion = "1.0.11";
+var ATversion = "1.0.12";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
