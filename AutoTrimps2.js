@@ -17,8 +17,6 @@ function ATscriptUnload(id) {
 	debug("Removing " + id + "_MODULE", "all");
 }
 
-ATscriptLoad(modulepath, 'utils');
-
 function initializeAutoTrimps() {
 	loadPageVariables();				//get autoTrimpSettings
 	ATscriptLoad('','SettingsGUI');		//populate Settings GUI
@@ -34,11 +32,14 @@ function initializeAutoTrimps() {
 
 
 
+
 var runInterval = 100;		//How often to loop through logic
 var mainLoopInterval;
 var guiLoopInterval;
 
-setTimeout(initializeAutoTrimps(), 1000);
+ATscriptLoad(modulepath, 'utils');
+document.getElementById("utils_MODULE").onload = () => {initializeAutoTrimps();}
+//setTimeout(initializeAutoTrimps(), 1000);
 
 function delayStartAgain(){
 	game.global.addonUser = true;
