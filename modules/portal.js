@@ -287,7 +287,6 @@ function findOutCurrentPortalLevel(){var a=-1,b=!1,d=getPageSetting("AutoPortal"
 
 MODULES["portal"].Rtimeout = 5000;
 MODULES["portal"].RbufferExceedFactor = 5;
-var Rportalzone = getPageSetting('RCustomAutoPortal');
 var RzonePostpone = 0;
 
 function RautoPortal() {
