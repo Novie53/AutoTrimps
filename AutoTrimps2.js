@@ -188,9 +188,9 @@ function mainLoop() {
 		}
 		if (getPageSetting('BetterAutoFight') == 1) betterAutoFight();
 		if (getPageSetting('BetterAutoFight') == 2) betterAutoFight3();
-		var forcePrecZ = (getPageSetting('ForcePresZ') < 0) || (game.global.world < getPageSetting('ForcePresZ'));
-		if (getPageSetting('DynamicPrestige2') > 0 && forcePrecZ) prestigeChanging2();
-		else autoTrimpSettings.Prestige.selected = (document.getElementById('Prestige').value) ? document.getElementById('Prestige').value : "Daggader";
+		// var forcePrecZ = (getPageSetting('ForcePresZ') < 0) || (game.global.world < getPageSetting('ForcePresZ'));
+		// if (getPageSetting('DynamicPrestige2') > 0 && forcePrecZ) prestigeChanging2();
+		//else autoTrimpSettings.Prestige.selected = (document.getElementById('Prestige').value) ? document.getElementById('Prestige').value : "Daggader";
 		if (game.global.world > 5 && game.global.challengeActive == "Daily" && getPageSetting('avoidempower') == true && typeof game.global.dailyChallenge.empower !== 'undefined' && !game.global.preMapsActive && !game.global.mapsActive && game.global.soldierHealth > 0) avoidempower();
 		if (getPageSetting('buywepsvoid') == true && ((getPageSetting('VoidMaps') == game.global.world && game.global.challengeActive != "Daily") || (getPageSetting('DailyVoidMod') == game.global.world && game.global.challengeActive == "Daily")) && game.global.mapsActive && getCurrentMapObject().location == "Void") buyWeps();
 		if ((getPageSetting('darmormagic') > 0 && typeof game.global.dailyChallenge.empower == 'undefined' && typeof game.global.dailyChallenge.bloodthirst == 'undefined' && (typeof game.global.dailyChallenge.bogged !== 'undefined' || typeof game.global.dailyChallenge.plague !== 'undefined' || typeof game.global.dailyChallenge.pressure !== 'undefined')) || (getPageSetting('carmormagic') > 0 && (game.global.challengeActive == 'Toxicity' || game.global.challengeActive == 'Nom'))) armormagic();
