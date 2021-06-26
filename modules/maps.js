@@ -86,7 +86,7 @@ function AT_ShouldTrimpsPrestigeFarm() {
 			}
 		}
 			
-		For Lead runs, we hack this by doubling the neededPrestige to acommodate odd zone-only farming. This might overshoot a bit
+		//For Lead runs, we hack this by doubling the neededPrestige to acommodate odd zone-only farming. This might overshoot a bit
 		if (game.global.challengeActive == 'Lead')
 			neededPrestige *= 2;
 			
