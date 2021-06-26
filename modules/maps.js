@@ -47,6 +47,158 @@ var vanillaMapatZone = false;
 var fragmentsNeeded = 0;
 var additionalCritMulti = 2 < getPlayerCritChance() ? 25 : 5;
 
+
+
+
+
+
+
+
+
+function AT_ShouldTrimpsPrestigeFarm() {
+	if (game.global.challengeActive == "Frugal") return false;
+	
+	let needToFarmPrestige = false;
+	let _skippedPrestige = false;
+	let maxPrestigeIndex = document.getElementById('Prestige').selectedIndex;
+	let dynamicLastZone = getPageSetting("DynamicPrestige2");
+	let dynPrestigeActive = false;
+	
+	
+	//Force Prestige Z
+	if (getPageSetting("ForcePresZ") >= 0 && game.global.world >= getPageSetting("ForcePresZ")) {
+		needToFarmPrestige = offlineProgress.countMapItems(game.global.world) > 0;		
+	}
+	
+	//Dynamic Prestige Z
+	if (!needToFarmPrestige && dynamicLastZone > 0 && maxPrestigeIndex > 2 && game.global.world < dynamicLastZone) {
+		dynPrestigeActive = true;
+		// Find total prestiges needed by determining current prestiges versus the desired prestiges by the end of the run
+		let neededPrestige = 0;
+		for (let i = 1; i <= maxPrestigeIndex; i++) {
+			let lastp = game.mapUnlocks[autoTrimpSettings.Prestige.list[i]].last;
+			if (lastp <= dynamicLastZone - 5) {
+				let addto = Math.floor((dynamicLastZone - lastp) / 5);
+				// For Scientist IV bonus, halve the required prestiges to farm
+				if (game.global.sLevel >= 4)
+					addto = Math.ceil(addto / 2);
+				neededPrestige += addto;
+			}
+		}
+			
+		For Lead runs, we hack this by doubling the neededPrestige to acommodate odd zone-only farming. This might overshoot a bit
+		if (game.global.challengeActive == 'Lead')
+			neededPrestige *= 2;
+			
+		if (neededPrestige > 0) {
+			let zonesToFarm = Math.ceil(neededPrestige / 10);
+			needToFarmPrestige = game.global.world > (dynamicLastZone - zonesToFarm) || game.mapUnlocks.Dagadder.last <= game.global.world - 5;
+		}
+	}
+	
+	//Prestige dropdown
+	if (!needToFarmPrestige && !dynPrestigeActive) {
+		let prestigeSetting = getPageSetting("Prestige");
+		needToFarmPrestige = prestigeSetting != "Off" && game.mapUnlocks[prestigeSetting].last <= game.global.world - 5
+	}
+	
+	
+	
+	
+	//Prestige Skip 1
+	if (needToFarmPrestige /*&& getPsString("gems", true) > 0 */&& (getPageSetting("PrestigeSkip1_2") == 1 || getPageSetting("PrestigeSkip1_2") == 2)) {
+		let prestigeAvailableToBuy = 0;
+		for (let i in AT_Constants.PrestigeList) {
+			i = AT_Constants.PrestigeList[i];
+			if (game.upgrades[i].allowed - game.upgrades[i].done > 0) {
+				prestigeAvailableToBuy++;
+			}
+		}
+		if (prestigeAvailableToBuy >= MODULES.maps.SkipNumUnboughtPrestiges) {
+			needToFarmPrestige = false;
+			_skippedPrestige = true;
+		}
+	}
+	
+	//Prestige Skip 2
+	if ((needToFarmPrestige || _skippedPrestige) && (getPageSetting('PrestigeSkip1_2') == 1 || getPageSetting('PrestigeSkip1_2') == 3)) {
+		let numLeft = AT_Constants.PrestigeListWepOnly.filter(pre => game.mapUnlocks[pre].last <= game.global.world - 5);
+		let shouldSkip = numLeft <= MODULES.maps.UnearnedPrestigesRequired;
+		if (shouldSkip != _skippedPrestige) {
+			needToFarmPrestige = !needToFarmPrestige;
+			_skippedPrestige = !_skippedPrestige;
+		}
+	}
+	
+	
+	
+	//return needToFarmPrestige;
+	needPrestige = needToFarmPrestige && game.global.mapBonus < 10;
+	skippedPrestige = _skippedPrestige;
+}
+
+function AT_ShouldTrimpsDoVoidMaps() {
+	let voidZone = 0;
+	let voidCell = 0;
+	let voidZoneMod = 0;
+	let DoVoidMaps = false;
+	
+	
+	if (game.global.challengeActive != "Daily") {
+		voidZone = getPageSetting("VoidMaps");
+		voidCell = getPageSetting("voidscell");
+		if (!getPageSetting("runnewvoidspoison") || getEmpowerment() == "Poison") {
+			voidZoneMod = getPageSetting("RunNewVoidsUntilNew");
+		}
+	}
+	else {
+		voidZone = getPageSetting("DailyVoidMod");
+		voidCell = getPageSetting("dvoidscell");
+		if (!getPageSetting("drunnewvoidspoison") || getEmpowerment() == "Poison") {
+			voidZoneMod = getPageSetting("dRunNewVoidsUntilNew");
+		}
+	}
+	
+	if (voidZone > 0 && game.global.totalVoidMaps > 0) {
+		//Invalid input checks
+		voidCell = voidCell > 100 || voidCell < 0 ? 70 : voidCell;
+		if (voidZoneMod == -1) { voidZoneMod = 9999; }
+		else if (voidZoneMod < 0) { voidZoneMod = 0; }
+		
+		DoVoidMaps = game.global.world >= voidZone && game.global.world <= (voidZone + voidZoneMod) && (game.global.lastClearedCell + 2) >= voidCell;
+	}
+
+
+	needToVoid = DoVoidMaps;
+	// var voidArrayDoneS = [];
+	// if (game.global.challengeActive != "Daily" && getPageSetting('onlystackedvoids') == true) {
+		// for (var mapz in game.global.mapsOwnedArray) {
+			// var theMapz = game.global.mapsOwnedArray[mapz];
+			// if (theMapz.location == 'Void' && theMapz.stacked > 0) {
+				// voidArrayDoneS.push(theMapz);
+			// }
+		// }
+	// }
+
+	// if (
+		// (game.global.totalVoidMaps <= 0) ||
+		// (!needToVoid) ||
+		// (getPageSetting('novmsc2') == true && game.global.runningChallengeSquared) ||
+		// (game.global.challengeActive != "Daily" && game.global.totalVoidMaps > 0 && getPageSetting('onlystackedvoids') == true && voidArrayDoneS.length < 1)
+	// ) {
+		// doVoids = false;
+	// }
+}
+
+
+
+
+
+
+
+
+
+
 function updateAutoMapsStatus(get) {
 	var status;
 	var minSp = getPageSetting('MinutestoFarmBeforeSpire');
@@ -280,12 +432,12 @@ function autoMap() {
 
 	//Vars
 	var customVars = MODULES["maps"];
-	var prestige = autoTrimpSettings.Prestige.selected;
+	//var prestige = autoTrimpSettings.Prestige.selected;
 	var challSQ = game.global.runningChallengeSquared;
 	var extraMapLevels = 0;
 
 	//Reset to defaults
-	if (prestige != "Off" && game.options.menu.mapLoot.enabled != 1) toggleSetting('mapLoot');
+	if (game.options.menu.mapLoot.enabled != 1) toggleSetting('mapLoot');
 	if ((game.options.menu.repeatUntil.enabled == 1 || game.options.menu.repeatUntil.enabled == 2 || game.options.menu.repeatUntil.enabled == 3) && !game.global.mapsActive && !game.global.preMapsActive) toggleSetting('repeatUntil');
 	if (game.options.menu.exitTo.enabled != 0) toggleSetting('exitTo');
 	if (game.options.menu.repeatVoids.enabled != 0) toggleSetting('repeatVoids');
@@ -298,95 +450,16 @@ function autoMap() {
 			document.getElementById('advExtraLevelSelect').value = "0";
 	}
 
-	//Void Vars
-	var minVoidZone = 0;
-	var maxVoidZone = 0;
-	var voidCell = 0;
+	
 
-	//Regular Run Voids
-	if (game.global.challengeActive != "Daily") {
-		//What cell to run Voids at
-		voidCell = ((getPageSetting('voidscell') > 0) ? getPageSetting('voidscell') : 70);
 
-		//What Zone Range to run Voids at
-		var poisonOK = !getPageSetting('runnewvoidspoison') || getEmpowerment() == 'Poison';
-		if (getPageSetting('VoidMaps') > 0) minVoidZone = getPageSetting('VoidMaps');
-		if (getPageSetting('RunNewVoidsUntilNew') > 0 && poisonOK) maxVoidZone = getPageSetting('RunNewVoidsUntilNew');
-	}
 
-	//Daily Voids
-	else {
-		//What cell to run Daily Voids at
-		voidCell = ((getPageSetting('dvoidscell') > 0) ? getPageSetting('dvoidscell') : 70);
+	AT_ShouldTrimpsDoVoidMaps(); //Changes the value of needToVoid
+	AT_ShouldTrimpsPrestigeFarm(); //Changes the value of needPrestige && skippedPrestige
 
-		//What Zone Range to run Voids at
-		var poisonOK = !getPageSetting('drunnewvoidspoison') || getEmpowerment() == 'Poison';
-		if (getPageSetting('DailyVoidMod') > 0) minVoidZone = getPageSetting('DailyVoidMod');
-		if (getPageSetting('dRunNewVoidsUntilNew') > 0 && poisonOK) maxVoidZone = getPageSetting('dRunNewVoidsUntilNew');
-	}
 
-	//Convert maxZone from an modificer (+1, +2...) to an fixed zone value (65, 66...)
-	maxVoidZone += minVoidZone;
 
-	//Checks if it's on the right zone range and with voids available
-	var preVoidCell = Math.floor((voidCell-1)/10)*10;
-	preVoidCheck = minVoidZone > 0 && game.global.totalVoidMaps > 0 && game.global.world >= minVoidZone && game.global.world <= maxVoidZone;
-	preVoidCheck &= game.global.lastClearedCell + 1 >= preVoidCell;
-	needToVoid = preVoidCheck && game.global.lastClearedCell + 1 >= voidCell;
 
-	var voidArrayDoneS = [];
-	if (game.global.challengeActive != "Daily" && getPageSetting('onlystackedvoids') == true) {
-		for (var mapz in game.global.mapsOwnedArray) {
-			var theMapz = game.global.mapsOwnedArray[mapz];
-			if (theMapz.location == 'Void' && theMapz.stacked > 0) {
-				voidArrayDoneS.push(theMapz);
-			}
-		}
-	}
-
-	if (
-		(game.global.totalVoidMaps <= 0) ||
-		(!needToVoid) ||
-		(getPageSetting('novmsc2') == true && game.global.runningChallengeSquared) ||
-		(game.global.challengeActive != "Daily" && game.global.totalVoidMaps > 0 && getPageSetting('onlystackedvoids') == true && voidArrayDoneS.length < 1)
-	) {
-		doVoids = false;
-	}
-
-	//Prestige
-	if ((getPageSetting('ForcePresZ') >= 0) && ((game.global.world + extraMapLevels) >= getPageSetting('ForcePresZ'))) {
-		const prestigeList = ['Supershield', 'Dagadder', 'Megamace', 'Polierarm', 'Axeidic', 'Greatersword', 'Harmbalest', 'Bootboost', 'Hellishmet', 'Pantastic', 'Smoldershoulder', 'Bestplate', 'GambesOP'];
-		needPrestige = prestigeList.some(prestige => game.mapUnlocks[prestige].last <= (game.global.world + extraMapLevels) - 5);
-		//needPrestige = (offlineProgress.countMapItems(game.global.world) !== 0); TODO - Test this!
-	} else
-		needPrestige = prestige != "Off" && game.mapUnlocks[prestige] && game.mapUnlocks[prestige].last <= (game.global.world + extraMapLevels) - 5 && game.global.challengeActive != "Frugal";
-
-	//Prestige Skip 1
-	skippedPrestige = false;
-	if (needPrestige && getPsString("gems", true) > 0 && (getPageSetting('PrestigeSkip1_2') == 1 || getPageSetting('PrestigeSkip1_2') == 2)) {
-		var prestigeList = ['Dagadder', 'Megamace', 'Polierarm', 'Axeidic', 'Greatersword', 'Harmbalest', 'Bootboost', 'Hellishmet', 'Pantastic', 'Smoldershoulder', 'Bestplate', 'GambesOP'];
-		var numUnbought = 0;
-		for (var i in prestigeList) {
-			var p = prestigeList[i];
-			if (game.upgrades[p].allowed - game.upgrades[p].done > 0)
-				numUnbought++;
-		}
-		if (numUnbought >= customVars.SkipNumUnboughtPrestiges) {
-			needPrestige = false;
-			skippedPrestige = true;
-		}
-	}
-
-	//Prestige Skip 2
-	if ((needPrestige || skippedPrestige) && (getPageSetting('PrestigeSkip1_2') == 1 || getPageSetting('PrestigeSkip1_2') == 3)) {
-		const prestigeList = ['Dagadder', 'Megamace', 'Polierarm', 'Axeidic', 'Greatersword', 'Harmbalest'];
-		const numLeft = prestigeList.filter(prestige => game.mapUnlocks[prestige].last <= (game.global.world + extraMapLevels) - 5);
-		const shouldSkip = numLeft <= customVars.UnearnedPrestigesRequired;
-		if (shouldSkip != skippedPrestige) {
-			needPrestige = !needPrestige;
-			skippedPrestige = !skippedPrestige;
-		}
-	}
 
 	//H:D Calc
 	var ourBaseDamage = calcOurDmg("avg", "X");
@@ -991,6 +1064,21 @@ function autoMap() {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //Radon
 

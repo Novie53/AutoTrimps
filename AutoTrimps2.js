@@ -59,10 +59,11 @@ function AT_startInterval(){
 //1.0.10	Bugfix && removal of legacy code
 //1.0.11	Bugfix && removal of legacy code
 //1.0.12	Bugfix
+//1.0.13	created two sub functions for automap to declutter it a bit.
 
 
 
-var ATversion = "1.0.12";
+var ATversion = "1.0.13";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
