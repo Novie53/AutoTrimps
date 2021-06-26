@@ -29,7 +29,7 @@ MODULES.maps.magmaHitsSurvived = 2; //Your geneticists are frequently lagging 1-
 var enoughDamage = true;
 var enoughHealth = true;
 var isFarming = false;
-var doVoids = false;
+//var doVoids = false;
 var needToVoid = false;
 var preVoidCheck = false;
 var needPrestige = false;
@@ -231,8 +231,8 @@ function updateAutoMapsStatus(get) {
 	else if (getPageSetting('SkipSpires') == 1 && ((game.global.challengeActive != 'Daily' && isActiveSpireAT()) || (game.global.challengeActive == 'Daily' && disActiveSpireAT()))) status = 'Skipping Spire';
 	else if (doMaxMapBonus) status = 'Max Map Bonus After Zone';
 	//else if (!game.global.mapsUnlocked) status = '&nbsp;';
-	else if (needPrestige && !doVoids) status = 'Prestige';
-	else if (doVoids) {
+	else if (needPrestige && !needToVoid) status = 'Prestige';
+	else if (needToVoid) {
 		var stackedMaps = Fluffy.isRewardActive('void') ? countStackedVoidMaps() : 0;
 		status = 'Void Maps: ' + game.global.totalVoidMaps + ((stackedMaps) ? " (" + stackedMaps + " stacked)" : "") + ' remaining';
 	}
@@ -760,7 +760,6 @@ function autoMap() {
 		});
 		for (var map in voidArraySorted) {
 			var theMap = voidArraySorted[map];
-			doVoids = true;
 			var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
 			if (game.global.world >= 181 || (game.global.challengeActive == "Corrupted" && game.global.world >= 60))
 				eAttack *= (getCorruptScale("attack") / 2).toFixed(1);
@@ -792,7 +791,7 @@ function autoMap() {
 	}
 
 	//Automaps
-	if (shouldDoMaps || doVoids || needPrestige) {
+	if (shouldDoMaps || needToVoid || needPrestige) {
 		if (selectedMap == "world") {
 			if (preSpireFarming) {
 				var spiremaplvl = (game.talents.mapLoot.purchased && MODULES["maps"].SpireFarm199Maps) ? game.global.world - 1 : game.global.world;
@@ -821,7 +820,7 @@ function autoMap() {
 				selectedMap = "create";
 		}
 	}
-	if ((game.global.challengeActive == 'Lead' && !challSQ) && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < customVars.shouldFarmCell)) {
+	if ((game.global.challengeActive == 'Lead' && !challSQ) && !needToVoid && (game.global.world % 2 == 0 || game.global.lastClearedCell < customVars.shouldFarmCell)) {
 		if (game.global.preMapsActive)
 			mapsClicked();
 		return;
@@ -899,8 +898,8 @@ function autoMap() {
 			if (!game.global.switchToMaps) {
 				mapsClicked();
 			}
-			if ((!getPageSetting('PowerSaving') || (getPageSetting('PowerSaving') == 2) && (doVoids || preVoidCheck)) && game.global.switchToMaps &&
-				(needPrestige || (doVoids || preVoidCheck) ||
+			if ((!getPageSetting('PowerSaving') || (getPageSetting('PowerSaving') == 2) && (needToVoid || preVoidCheck)) && game.global.switchToMaps &&
+				(needPrestige || (needToVoid || preVoidCheck) ||
 					((game.global.challengeActive == 'Lead' && !challSQ) && game.global.world % 2 == 1) ||
 					(!enoughDamage && enoughHealth && game.global.lastClearedCell < 9) ||
 					(shouldFarm && game.global.lastClearedCell >= customVars.shouldFarmCell) ||
@@ -908,7 +907,7 @@ function autoMap() {
 				(
 					(game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) ||
 					((game.global.challengeActive == 'Lead' && !challSQ) && game.global.lastClearedCell > 93) ||
-					((doVoids || preVoidCheck) && game.global.lastClearedCell > 70)
+					((needToVoid || preVoidCheck) && game.global.lastClearedCell > 70)
 				)
 			) {
 				if (scryerStuck) {
