@@ -14,7 +14,9 @@ function AT_safeBuyBuilding(building, amount = 1) {
 	
 	
 	let maxBuyAmount = 1;
-	if (game.talents.deciBuild.purchased)
+	if (building == "Warpstation" && game.global.sLevel >= 4 && game.options.menu.forceQueue.enabled == 0)
+		maxBuyAmount = 9999;
+	else if (game.talents.deciBuild.purchased)
 		maxBuyAmount = 10;
 	else if (bwRewardUnlocked("DoubleBuild"))
 		maxBuyAmount = 2;
