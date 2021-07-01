@@ -27,26 +27,6 @@ function AT_safeBuyBuilding(building, amount = 1) {
 	debug("Building " + amount + " " + building + (amount > 1 ? "s" : ""), "buildings", '*hammer2');
 	buyBuilding(building, true, true, amount);
 	return true
-
-/* 
-	if (building == 'Warpstation') {
-		if (game.buildings.Warpstation.owned < 2) {
-			game.global.buyAmt = 'Max';
-			game.global.maxSplit = 1;
-		} else {
-			game.global.buyAmt = 1;
-		}
-		buyBuilding(building, true, true);
-		debug('Building ' + game.global.buyAmt + ' ' + building + 's', "buildings", '*rocket');
-		postBuy2(oldBuy);
-		return;
-	}
-	else {
-		debug("Building " + amount + " " + building + (amount > 1 ? "s" : ""), "buildings", '*hammer2');
-		buyBuilding(building, true, true, amount);
-		return true
-	}
-	 */
 }
 
 function AT_buyFoodEfficientHousing() {
