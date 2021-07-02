@@ -135,7 +135,7 @@ function mainLoop() {
 		if (getPageSetting('AutoEggs'))
 			easterEggClicked();
 		setTitle();
-		if (getPageSetting('autoheirlooms') == true && getPageSetting('typetokeep') != 'None' && getPageSetting('raretokeep') != 'None') {
+		if (getPageSetting('autoheirlooms') == true && getPageSetting('typetokeep') != 'None' && getPageSetting('raretokeep') != 'None')
 			autoheirlooms3();
 	}
 
