@@ -61,10 +61,11 @@ function AT_startInterval(){
 //1.0.12	Bugfix
 //1.0.13	created two sub functions for automap to declutter it a bit.
 //1.0.14	modified AT_safeBuyBuilding so Warpstations can instant craft max amount if Trimps has beaten science 4
+//1.0.15	Added auto sort heirlooms every new world
 
 
 
-var ATversion = "1.0.14";
+var ATversion = "1.0.15";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -124,16 +125,18 @@ function mainLoop() {
 	}
 	heirloomFlag = heirloomsShown;
 	if (aWholeNewWorld) {
-		switch (document.getElementById('tipTitle').innerHTML) {
-			case 'The Improbability':
-			case 'Corruption':
-			case 'Spire':
-			case 'The Magma':
-				cancelTooltip();
-		}
+		// switch (document.getElementById('tipTitle').innerHTML) {
+			// case 'The Improbability':
+			// case 'Corruption':
+			// case 'Spire':
+			// case 'The Magma':
+				// cancelTooltip();
+		// }
 		if (getPageSetting('AutoEggs'))
 			easterEggClicked();
 		setTitle();
+		if (getPageSetting('autoheirlooms') == true && getPageSetting('typetokeep') != 'None' && getPageSetting('raretokeep') != 'None') {
+			autoheirlooms3();
 	}
 
 	//Logic for Universe 1
