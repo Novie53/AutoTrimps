@@ -141,10 +141,10 @@ function AT_workerRatios() {
 	} else {
 		ratioSet = MODULES["jobs"].autoRatio1;
 	}
-	//Override normal ratios with challenge specific ones
+	/* //Override normal ratios with challenge specific ones
 	if (game.global.challengeActive == 'Watch'){
 		ratioSet = MODULES["jobs"].autoRatio1;
-	}
+	} */
 	//Install the new ratios into active settings
 	setPageSetting('FarmerRatio',ratioSet[0]);
 	setPageSetting('LumberjackRatio',ratioSet[1]);
@@ -242,7 +242,7 @@ function AT_buyMagmaMancer() {
 
 function AT_buyJobs() {
 	if (game.resources.trimps.owned / game.resources.trimps.realMax() < 0.9) return;
-	if (game.global.challengeActive == "Watch") return;
+	// if (game.global.challengeActive == "Watch") return;
 	
 	AT_buyJobs_LessThree(); //Scientist, Trainers, Explorers
 	AT_buyJobs_MainThree(); //Farmer, Lumberjack, Miner
