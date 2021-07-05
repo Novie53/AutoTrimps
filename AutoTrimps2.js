@@ -23,7 +23,7 @@ function AT_initializeAutoTrimps() {
 	ATscriptLoad('','SettingsGUI');		//populate Settings GUI
 	ATscriptLoad('','Graphs');			//populate Graphs
 	AT_initializeConstants()
-	let ATmoduleList = ['import-export', 'query', 'calc', 'portal', 'upgrades', 'heirlooms', 'buildings', 'jobs', 'equipment', 'gather', 'stance', 'maps', 'breedtimer', 'dynprestige', 'fight', 'scryer', 'magmite', 'nature', 'other', 'perks', 'fight-info', 'performance'];
+	let ATmoduleList = ['import-export', 'query', 'calc', 'portal', 'upgrades', 'heirlooms', 'buildings', 'jobs', 'equipment', 'gather', 'stance', 'maps', 'breedtimer', 'dynprestige', 'fight', 'scryer', 'magmite', 'nature', 'other', 'fight-info', 'performance'];
 	for (let m in ATmoduleList) {
 		ATscriptLoad(modulepath, ATmoduleList[m]);
 	}
