@@ -144,28 +144,31 @@ function AT_ShouldTrimpsDoVoidMaps() {
 	let DoVoidMaps = false;
 	
 	
-	if (game.global.challengeActive != "Daily") {
-		voidZone = getPageSetting("VoidMaps");
-		voidCell = getPageSetting("voidscell");
-		if (!getPageSetting("runnewvoidspoison") || getEmpowerment() == "Poison") {
-			voidZoneMod = getPageSetting("RunNewVoidsUntilNew");
-		}
-	}
-	else {
-		voidZone = getPageSetting("DailyVoidMod");
-		voidCell = getPageSetting("dvoidscell");
-		if (!getPageSetting("drunnewvoidspoison") || getEmpowerment() == "Poison") {
-			voidZoneMod = getPageSetting("dRunNewVoidsUntilNew");
-		}
-	}
 	
-	if (voidZone > 0 && game.global.totalVoidMaps > 0) {
-		//Invalid input checks
-		voidCell = voidCell > 100 || voidCell < 0 ? 70 : voidCell;
-		if (voidZoneMod == -1) { voidZoneMod = 9999; }
-		else if (voidZoneMod < 0) { voidZoneMod = 0; }
+	if (game.global.totalVoidMaps > 0 && !(game.global.runningChallengeSquared && getPageSetting("NoVMInC2"))) {
+		if (game.global.challengeActive != "Daily") {
+			voidZone = getPageSetting("VoidMaps");
+			voidCell = getPageSetting("voidscell");
+			if (!getPageSetting("runnewvoidspoison") || getEmpowerment() == "Poison") {
+				voidZoneMod = getPageSetting("RunNewVoidsUntilNew");
+			}
+		}
+		else {
+			voidZone = getPageSetting("DailyVoidMod");
+			voidCell = getPageSetting("dvoidscell");
+			if (!getPageSetting("drunnewvoidspoison") || getEmpowerment() == "Poison") {
+				voidZoneMod = getPageSetting("dRunNewVoidsUntilNew");
+			}
+		}
 		
-		DoVoidMaps = game.global.world >= voidZone && game.global.world <= (voidZone + voidZoneMod) && (game.global.lastClearedCell + 2) >= voidCell;
+		if (voidZone > 0) {
+			//Invalid input checks
+			voidCell = voidCell > 100 || voidCell < 0 ? 70 : voidCell;
+			if (voidZoneMod == -1) { voidZoneMod = 9999; }
+			else if (voidZoneMod < 0) { voidZoneMod = 0; }
+			
+			DoVoidMaps = game.global.world >= voidZone && game.global.world <= (voidZone + voidZoneMod) && (game.global.lastClearedCell + 2) >= voidCell;
+		}
 	}
 
 
@@ -183,7 +186,7 @@ function AT_ShouldTrimpsDoVoidMaps() {
 	// if (
 		// (game.global.totalVoidMaps <= 0) ||
 		// (!needToVoid) ||
-		// (getPageSetting('novmsc2') == true && game.global.runningChallengeSquared) ||
+		// (getPageSetting('NoVMInC2') == true && game.global.runningChallengeSquared) ||
 		// (game.global.challengeActive != "Daily" && game.global.totalVoidMaps > 0 && getPageSetting('onlystackedvoids') == true && voidArrayDoneS.length < 1)
 	// ) {
 		// doVoids = false;

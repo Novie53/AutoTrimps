@@ -1076,7 +1076,7 @@ function calcCurrentStance() {
 }
 
 
-
+//return the total amount of Science needed to buy all upgrades currently available
 function AT_scienceNeeded() {
 	var amount = 0;
 	for (var upgrade in AT_Constants.UpgradeList) {
