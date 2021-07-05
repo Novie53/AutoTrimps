@@ -67,7 +67,7 @@ function AT_ShouldTrimpsPrestigeFarm() {
 	
 	//Force Prestige Z
 	if (getPageSetting("ForcePresZ") >= 0 && game.global.world >= getPageSetting("ForcePresZ")) {
-		needToFarmPrestige = offlineProgress.countMapItems(game.global.world) > 0;		
+		needToFarmPrestige = offlineProgress.countMapItems(game.global.world) > 0;
 	}
 	
 	//Dynamic Prestige Z
@@ -463,7 +463,6 @@ function autoMap() {
 
 
 
-
 	//H:D Calc
 	var ourBaseDamage = calcOurDmg("avg", "X");
 
@@ -552,6 +551,12 @@ function autoMap() {
 	doMaxMapBonus = (maxMapBonusZ >= 0 && game.global.mapBonus < getPageSetting("MaxMapBonuslimit") && game.global.world >= maxMapBonusZ);
 	if (doMaxMapBonus)
 		shouldDoMaps = true;
+	
+	
+	//During Watch challenge, check if there is anything to grab in maps.
+	if (game.global.challengeActive == "Watch" && offlineProgress.countMapItems(game.global.world) > 0) {
+		shouldDoMaps = true;
+	}
 
 	//Calculates Siphonology and Extra Map Levels
 	var minLvl = game.global.world - (shouldFarmLowerZone ?  11 : game.portal.Siphonology.level);
