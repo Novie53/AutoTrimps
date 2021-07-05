@@ -217,23 +217,10 @@ function doPortal(challenge) {
 			equipHeirloom();
 		}
 	}
-	/*if (getPageSetting('autonu') == true && getPageSetting('heirloomnu') != undefined) {
-		spendNu(); spendNu(); spendNu(); spendNu(); spendNu(); spendNu();
-	}*/
-	if (getPageSetting('AutoAllocatePerks')==2) {
-		viewPortalUpgrades();
-		numTab(6, true)
-		buyPortalUpgrade('Looting_II');
-		activateClicked();
-		cancelPortal();
-		debug('First Stage: Bought Max Looting II');
-	}
 	portalClicked();
 	if (!portalWindowOpen) {
+		debugger; //Does this ever happen?
 		portalClicked();
-	}
-	if (portalWindowOpen && getPageSetting('AutoAllocatePerks')==1 && (typeof MODULES["perks"] !== 'undefined' || typeof AutoPerks !== 'undefined')) {
-		AutoPerks.clickAllocate();
 	}
 	if (portalWindowOpen && getPageSetting('c2runnerstart')==true && getPageSetting('c2runnerportal') > 0 && getPageSetting('c2runnerpercent') > 0) {
 		c2runner();
@@ -270,14 +257,20 @@ function doPortal(challenge) {
 		}
 		selectChallenge(challenge);
 	}
-	if (portalWindowOpen && getPageSetting('AutoAllocatePerks')==2) {
-		numTab(6, true)
-		buyPortalUpgrade('Looting_II');
-		debug('Second Stage: Bought Max Looting II');
-	}
 	pushData();
 	activatePortal();
 	lastHeliumZone = 0; zonePostpone = 0;
+	
+	
+	if (getPageSetting("DumpHEIntoLooting")) {
+		viewPortalUpgrades();
+		numTab(6, true);
+		if (!game.portal.Looting_II.locked) {
+			buyPortalUpgrade("Looting_II");
+		}
+		buyPortalUpgrade("Looting");
+		activateClicked();
+	}
 }
 
 function finishChallengeSquared(){var a=getPageSetting("FinishC2");game.global.world>=a&&(abandonChallenge(),debug("Finished challenge2 because we are on zone "+game.global.world,"other","oil"))}

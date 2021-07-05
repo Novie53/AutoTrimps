@@ -62,10 +62,11 @@ function AT_startInterval(){
 //1.0.13	created two sub functions for automap to declutter it a bit.
 //1.0.14	modified AT_safeBuyBuilding so Warpstations can instant craft max amount if Trimps has beaten science 4
 //1.0.15	Added auto sort heirlooms every new world
+//1.0.16	reworked "Dump HE into Looting"
 
 
 
-var ATversion = "1.0.15";
+var ATversion = "1.0.16";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
