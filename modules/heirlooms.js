@@ -168,6 +168,7 @@ function AT_collectHeirlooms() {
 		let heirloomTypeToCollect = ["None", "Shield", "Staff", "Core", "All"][getPageSetting("typetokeep")];
 		if (heirloomTypeToCollect == "All") {
 			while (game.global.heirloomsCarried.length < getMaxCarriedHeirlooms() && game.global.heirloomsExtra.length > 0) {
+				let before = game.global.heirloomsCarried.length;
 				let heirLoomList = AT_appraiseHeirlooms("Shield");
 				if (heirLoomList["Shield"].length > 0) {
 					let carryshield = heirLoomList["Shield"].shift();
@@ -186,6 +187,9 @@ function AT_collectHeirlooms() {
 					selectHeirloom(carrycore.index, "heirloomsExtra");
 					carryHeirloom();
 				}
+				if (before == game.global.heirloomsCarried.length) {
+					break;
+				}					
 			}
 		}
 		else if (heirloomTypeToCollect != "None") {
