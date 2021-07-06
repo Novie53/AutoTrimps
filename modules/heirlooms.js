@@ -126,7 +126,7 @@ function AT__appraiseHeirloom(heirloomIndex, location) {
 }
 
 function AT_appraiseHeirlooms(typesToAppraise) {
-	let heirLoomList = {"Shield": [], "Staff": [], "Cire": []};
+	let heirLoomList = {"Shield": [], "Staff": [], "Core": []};
 	let rarityToKeep = AT_Constants["HeirloomRarityTable"][getPageSetting('raretokeep')];
 	
 	for (let index in game.global.heirloomsExtra) {
