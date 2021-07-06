@@ -175,9 +175,11 @@ function AT_buyBuildings() {
 	
 	//Nurseries
 	if (!game.buildings.Nursery.locked) {
-		let maxNurseAmount = getPageSetting('MaxNursery') == -1 ? 99999 : getPageSetting('MaxNursery');
-		let spireOverride = false;
+		let maxNurseAmount = getPageSetting('MaxNursery');
+		if (maxNurseAmount == -1) {maxNurseAmount = 9999;}
+		else if (maxNurseAmount < 0) {maxNurseAmount = 0;}
 		//Spire override
+		let spireOverride = false;
 		if (getPageSetting('PreSpireNurseries') != -1 && isActiveSpireAT()) {
 			maxNurseAmount = getPageSetting('PreSpireNurseries');
 			spireOverride = true;
