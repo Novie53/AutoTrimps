@@ -9,7 +9,7 @@ function dlowdmgshield(){for(loom of game.global.heirloomsCarried)if(loom.name==
 
 
 function getHeirloomEff(name, type) {
-	if (type == "staff") {
+	if (type == "Staff") {
 		if (getPageSetting('slot1modst') == name) return 5;
 		else if (getPageSetting('slot2modst') == name) return 5;
 		else if (getPageSetting('slot3modst') == name) return 5;
@@ -18,7 +18,7 @@ function getHeirloomEff(name, type) {
 		else if (getPageSetting('slot6modst') == name) return 5;
 		else return 0;
 	}
-	else if (type == "shield") {
+	else if (type == "Shield") {
 		if (getPageSetting('slot1modsh') == name) return 5;
 		else if (getPageSetting('slot2modsh') == name) return 5;
 		else if (getPageSetting('slot3modsh') == name) return 5;
@@ -27,7 +27,7 @@ function getHeirloomEff(name, type) {
 		else if (getPageSetting('slot6modsh') == name) return 5;
 		else return 0;
 	}
-	else if (type == "core") {
+	else if (type == "Core") {
 		if (getPageSetting('slot1modcr') == name) return 5;
 		else if (getPageSetting('slot2modcr') == name) return 5;
 		else if (getPageSetting('slot3modcr') == name) return 5;
@@ -36,7 +36,7 @@ function getHeirloomEff(name, type) {
 	}
 }
 
-function evaluateHeirloomMods2(loom, location) {
+/* function evaluateHeirloomMods2(loom, location) {
 	var index = loom;
 	var eff = 0;
 	var name;
@@ -91,8 +91,8 @@ function evaluateHeirloomMods2(loom, location) {
   }
   return eff;
 }
-
-var worth3 = {'Shield': [], 'Staff': [], 'Core': []};
+ */
+/* var worth3 = {'Shield': [], 'Staff': [], 'Core': []};
 function worthOfHeirlooms3(){
 	worth3 = {'Shield': [], 'Staff': [], 'Core': []};
 	for (var index in game.global.heirloomsExtra) {
@@ -104,9 +104,50 @@ function worthOfHeirlooms3(){
 	worth3['Shield'].sort(valuesort);
 	worth3['Staff'].sort(valuesort);
 	worth3['Core'].sort(valuesort);
+} */
+
+function AT__appraiseHeirloom(heirloomIndex, location) {
+	let heirloom;
+	let eff = 0;
+	let modName;
+	
+	if (location.includes('Equipped'))
+		heirloom = game.global[location];
+	else
+		heirloom = game.global[location][heirloomIndex];
+	
+	for (let modIndex in heirloom.mods) {
+		modName = heirloom.mods[modIndex][0];
+		eff += getHeirloomEff(modName, heirloom.type);
+		if (name == "empty")
+			eff *= 4;
+	}
+	return eff;
 }
 
-function autoheirlooms3() {
+function AT_appraiseHeirlooms(typesToAppraise) {
+	let heirLoomList = {"Shield": [], "Staff": [], "Cire": []};
+	let rarityToKeep = AT_Constants["HeirloomRarityTable"][getPageSetting('raretokeep')];
+	
+	for (let index in game.global.heirloomsExtra) {
+		let theLoom = game.global.heirloomsExtra[index];
+		if (typesToAppraise == theLoom.type && theLoom.rarity >= rarityToKeep) {
+			heirLoomList[theLoom.type].push({
+				//"location": "heirloomsExtra",
+				"index": index,
+				//"rarity": theLoom.rarity,
+				"eff": AT__appraiseHeirloom(index, "heirloomsExtra")
+			});
+		}
+	}
+	let valuesort = function(a, b){return b.eff - a.eff;};
+	heirLoomList["Shield"].sort(valuesort);
+	heirLoomList["Staff"].sort(valuesort);
+	heirLoomList["Core"].sort(valuesort);
+	return heirLoomList;
+}
+
+function AT_collectHeirlooms() {
 	if (!heirloomsShown && game.global.heirloomsExtra.length > 0) {
 		for (let index = 0; index < game.global.heirloomsCarried.length; index++) {
 			selectHeirloom(0, 'heirloomsCarried');
@@ -117,75 +158,48 @@ function autoheirlooms3() {
 		let originalLength = game.global.heirloomsExtra.length;
 		for (let index = 0; index < originalLength; index++) {
 			if (game.global.heirloomsExtra[index].protected && game.global.heirloomsCarried.length < getMaxCarriedHeirlooms()) {
-				selectHeirloom(index, 'heirloomsExtra');
+				selectHeirloom(index, "heirloomsExtra");
 				carryHeirloom();
 				index--;
 				originalLength--;
 			}
 		}
 
-		//SHIELD
-		if (getPageSetting('typetokeep') == 1) {
+		let heirloomTypeToCollect = ["None", "Shield", "Staff", "Core", "All"][getPageSetting("typetokeep")];
+		if (heirloomTypeToCollect == "All") {
 			while (game.global.heirloomsCarried.length < getMaxCarriedHeirlooms() && game.global.heirloomsExtra.length > 0) {
-				worthOfHeirlooms3();
-				if (worth3["Shield"].length > 0) {
-					let carryshield = worth3["Shield"].shift();
-					selectHeirloom(carryshield.index, 'heirloomsExtra');
-							carryHeirloom();
-						}
-			else break;
+				let heirLoomList = AT_appraiseHeirlooms("Shield");
+				if (heirLoomList["Shield"].length > 0) {
+					let carryshield = heirLoomList["Shield"].shift();
+					selectHeirloom(carryshield.index, "heirloomsExtra");
+					carryHeirloom();
+			  	}
+				heirLoomList = AT_appraiseHeirlooms("Staff");
+				if (heirLoomList["Staff"].length > 0) {
+					let carrystaff = heirLoomList["Staff"].shift();
+					selectHeirloom(carrystaff.index, "heirloomsExtra");
+					carryHeirloom();
 				}
+				heirLoomList = AT_appraiseHeirlooms("Core");
+				if (heirLoomList["Core"].length > 0) {
+					let carrycore = heirLoomList["Core"].shift();
+					selectHeirloom(carrycore.index, "heirloomsExtra");
+					carryHeirloom();
+				}
+			}
 		}
-
-	//STAFF
-	else if (getPageSetting('typetokeep') == 2) {
-	   		 while ((game.global.heirloomsCarried.length < getMaxCarriedHeirlooms()) && game.global.heirloomsExtra.length > 0){
-						worthOfHeirlooms3();
-						if (worth3["Staff"].length > 0){
-							var carrystaff = worth3["Staff"].shift();
-							selectHeirloom(carrystaff.index, 'heirloomsExtra');
-							carryHeirloom();
-						}
-			else break;
+		else if (heirloomTypeToCollect != "None") {
+			while (game.global.heirloomsCarried.length < getMaxCarriedHeirlooms() && game.global.heirloomsExtra.length > 0) {
+				let heirLoomList = AT_appraiseHeirlooms(heirloomTypeToCollect);
+				if (heirLoomList[heirloomTypeToCollect].length > 0) {
+					let carryshield = heirLoomList[heirloomTypeToCollect].shift();
+					selectHeirloom(carryshield.index, "heirloomsExtra");
+					carryHeirloom();
 				}
-	}
-
-	//CORE
-	else if (getPageSetting('typetokeep') == 3) {
-	   		 while ((game.global.heirloomsCarried.length < getMaxCarriedHeirlooms()) && game.global.heirloomsExtra.length > 0){
-						worthOfHeirlooms3();
-						if (worth3["Core"].length > 0){
-							var carrycore = worth3["Core"].shift();
-							selectHeirloom(carrycore.index, 'heirloomsExtra');
-							carryHeirloom();
-						}
-			else break;
-				}
-	}
-
-	//ALL
-	else if (getPageSetting('typetokeep') == 4) {
-	   		 while ((game.global.heirloomsCarried.length < getMaxCarriedHeirlooms()) && game.global.heirloomsExtra.length > 0){
-					worthOfHeirlooms3();
-					if (worth3["Shield"].length > 0){
-						var carryshield = worth3["Shield"].shift();
-						selectHeirloom(carryshield.index, 'heirloomsExtra');
-							carryHeirloom();
-			  		}
-						worthOfHeirlooms3();
-						if (worth3["Staff"].length > 0){
-							var carrystaff = worth3["Staff"].shift();
-							selectHeirloom(carrystaff.index, 'heirloomsExtra');
-							carryHeirloom();
-						}
-						worthOfHeirlooms3();
-						if (worth3["Core"].length > 0){
-							var carrycore = worth3["Core"].shift();
-							selectHeirloom(carrycore.index, 'heirloomsExtra');
-							carryHeirloom();
-						}
-				}
-	}
+				else
+					break;
+			}
+		}
 	}
 }
 

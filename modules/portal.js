@@ -208,8 +208,8 @@ function doPortal(challenge) {
 	if (getPageSetting('spendmagmite')==1) {
 		autoMagmiteSpender();
 	}
-	if (getPageSetting('autoheirlooms') == true && getPageSetting('typetokeep') != 'None' && getPageSetting('raretokeep') != 'None') {
-		autoheirlooms3();
+	if (getPageSetting('autoheirlooms') == true) {
+		AT_collectHeirlooms();
 	}
 	if (game.global.ShieldEquipped.name != getPageSetting('highdmg') || game.global.ShieldEquipped.name != getPageSetting('dhighdmg')) {
 		if (highdmgshield() != undefined) {
@@ -408,7 +408,7 @@ function RdailyAutoPortal() {
 function RdoPortal(challenge) {
 	if(!game.global.portalActive) return;
 	if (getPageSetting('autoheirlooms') == true && getPageSetting('typetokeep') != 'None' && getPageSetting('raretokeep') != 'None') {
-	autoheirlooms3();
+		AT_collectHeirlooms();
 	}
 	if (game.global.ShieldEquipped.name != getPageSetting('highdmg') || game.global.ShieldEquipped.name != getPageSetting('dhighdmg')) {
 		if (highdmgshield() != undefined) {

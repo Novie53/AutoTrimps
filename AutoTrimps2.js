@@ -63,10 +63,11 @@ function AT_startInterval(){
 //1.0.14	modified AT_safeBuyBuilding so Warpstations can instant craft max amount if Trimps has beaten science 4
 //1.0.15	Added auto sort heirlooms every new world
 //1.0.16	reworked "Dump HE into Looting"
+//1.0.17	cleaned up auto heirloom collector
 
 
 
-var ATversion = "1.0.16";
+var ATversion = "1.0.17";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -136,8 +137,8 @@ function mainLoop() {
 		if (getPageSetting('AutoEggs'))
 			easterEggClicked();
 		setTitle();
-		if (getPageSetting('autoheirlooms') == true && getPageSetting('typetokeep') != 'None' && getPageSetting('raretokeep') != 'None')
-			autoheirlooms3();
+		if (getPageSetting('autoheirlooms') == true)
+			AT_collectHeirlooms();
 	}
 
 	//Logic for Universe 1

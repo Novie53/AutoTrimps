@@ -177,11 +177,25 @@ function throwErrorfromModule(){throw new Error("We have successfully read the t
 
 
 function AT_initializeConstants() {
-	AT_Constants["ManualResourceList"] = {'food': 'Farmer', 'wood': 'Lumberjack', 'metal': 'Miner'};
+	AT_Constants["ManualResourceList"] = {"food": "Farmer", "wood": "Lumberjack", "metal": "Miner"};
 	AT_Constants["PrestigeList"] = ["Supershield", "Dagadder", "Megamace", "Polierarm", "Axeidic", "Greatersword", "Harmbalest", "Bootboost", "Hellishmet", "Pantastic", "Smoldershoulder", "Bestplate", "GambesOP"];
 	AT_Constants["PrestigeListWepOnly"] = ["Dagadder", "Megamace", "Polierarm", "Axeidic", "Greatersword", "Harmbalest"];
-	AT_Constants["UpgradeList"] = ['Miners', 'Scientists', 'Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Speedexplorer', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation', 'Shieldblock', 'Potency', 'Magmamancers', "Gymystic"];
+	AT_Constants["UpgradeList"] = ["Miners", "Scientists", "Coordination", "Speedminer", "Speedlumber", "Speedfarming", "Speedscience", "Speedexplorer", "Megaminer", "Megalumber", "Megafarming", "Megascience", "Efficiency", "TrainTacular", "Trainers", "Explorers", "Blockmaster", "Battle", "Bloodlust", "Bounty", "Egg", "Anger", "Formations", "Dominance", "Barrier", "UberHut", "UberHouse", "UberMansion", "UberHotel", "UberResort", "Trapstorm", "Gigastation", "Shieldblock", "Potency", "Magmamancers", "Gymystic"];
 	AT_Constants["FoodHousing"] = ["Hut", "House", "Mansion", "Hotel", "Resort"];
 	AT_Constants["GemHousing"] = ["Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
-	AT_Constants["ResourcerStorageList"] = {'Barn': 'food', 'Shed': 'wood', 'Forge': 'metal'};
+	AT_Constants["ResourcerStorageList"] = {"Barn": "food", "Shed": "wood", "Forge": "metal"};
+	AT_Constants["HeirloomRarityTable"] = {
+		"Any": 0,
+		"Common": 0,
+		"Uncommon": 1,
+		"Rare": 2,
+		"Epic": 3,
+		"Legendary": 4,
+		"Magnificent": 5,
+		"Ethereal": 6,
+		"Magmatic": 7,
+		"Plagued": 8,
+		"Radiating": 9,
+		"Hazardous": 10
+	};
 }

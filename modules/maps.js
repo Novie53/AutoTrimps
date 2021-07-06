@@ -55,7 +55,7 @@ var additionalCritMulti = 2 < getPlayerCritChance() ? 25 : 5;
 
 
 
-function AT_ShouldTrimpsPrestigeFarm() {
+function AT_shouldTrimpsPrestigeFarm() {
 	if (game.global.challengeActive == "Frugal") return false;
 	
 	let needToFarmPrestige = false;
@@ -137,7 +137,7 @@ function AT_ShouldTrimpsPrestigeFarm() {
 	skippedPrestige = _skippedPrestige;
 }
 
-function AT_ShouldTrimpsDoVoidMaps() {
+function AT_shouldTrimpsDoVoidMaps() {
 	let voidZone = 0;
 	let voidCell = 0;
 	let voidZoneMod = 0;
@@ -457,8 +457,8 @@ function autoMap() {
 
 
 
-	AT_ShouldTrimpsDoVoidMaps(); //Changes the value of needToVoid
-	AT_ShouldTrimpsPrestigeFarm(); //Changes the value of needPrestige && skippedPrestige
+	AT_shouldTrimpsDoVoidMaps(); //Changes the value of needToVoid
+	AT_shouldTrimpsPrestigeFarm(); //Changes the value of needPrestige && skippedPrestige
 
 
 
