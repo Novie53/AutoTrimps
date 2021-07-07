@@ -64,10 +64,11 @@ function AT_startInterval(){
 //1.0.15	Added auto sort heirlooms every new world
 //1.0.16	reworked "Dump HE into Looting"
 //1.0.17	cleaned up auto heirloom collector
+//1.0.18	cleaned up magmite.js
 
 
 
-var ATversion = "1.0.17";
+var ATversion = "1.0.18";
 var ATrunning = true;
 var ATmessageLogTabVisible = true;
 var enableDebug = true;
@@ -104,13 +105,13 @@ var needGymystic = true;
 var heirloomFlag = false;
 var daily3 = false;
 var heirloomCache = game.global.heirloomsExtra.length;
-var magmiteSpenderChanged = false;
 var lastHeliumZone = 0;
 var lastRadonZone = 0;
 
 
 var AT_Constants = {};
 var AT_GlobalVars = {};
+AT_GlobalVars.magmiteSpenderChanged = false; //Prevents magmite from firing 10 sec after changing settings to prevent mistakes
 
 
 function mainLoop() {
@@ -162,7 +163,9 @@ function mainLoop() {
 		//Jobs
 		if (getPageSetting('BuyJobsNew') == 1) { AT_workerRatios(); AT_buyJobs(); }
 		else if (getPageSetting('BuyJobsNew') == 2) AT_buyJobs();
-		
+		//Magma Generator
+		if (getPageSetting('UseAutoGen') == true) AT_autoGenerator();
+		if (getPageSetting('spendmagmite') == 2 && !AT_GlobalVars.magmiteSpenderChanged) AT_autoMagmiteSpender();
 		
 		
 		if (getPageSetting('AutoMaps') > 0 && game.global.mapsUnlocked) autoMap();
@@ -171,12 +174,11 @@ function mainLoop() {
 		if (aWholeNewWorld && getPageSetting('AutoRoboTrimp')) autoRoboTrimp();
 		if (game.global.challengeActive == "Daily" && getPageSetting('buyheliumy') >= 1 && getDailyHeliumValue(countDailyWeight()) >= getPageSetting('buyheliumy') && game.global.b >= 100 && !game.singleRunBonuses.heliumy.owned) purchaseSingleRunBonus('heliumy');
 		if (aWholeNewWorld && getPageSetting('FinishC2') > 0 && game.global.runningChallengeSquared) finishChallengeSquared();
-		if (getPageSetting('spendmagmite') == 2 && !magmiteSpenderChanged) autoMagmiteSpender();
 		if (getPageSetting('AutoNatureTokens') && game.global.world > 229) autoNatureTokens();
 		if (getPageSetting('autoenlight') && game.global.world > 229 && game.global.uberNature == false) autoEnlight();
 		
 
-		if (getPageSetting('UseAutoGen') == true) autoGenerator();
+		
 
 		//Portal
 		if (autoTrimpSettings.AutoPortal.selected != "Off" && game.global.challengeActive != "Daily" && !game.global.runningChallengeSquared) autoPortal();

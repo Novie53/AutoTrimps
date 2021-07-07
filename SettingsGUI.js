@@ -1161,10 +1161,8 @@ function settingChanged(id) {
     }
     if (btn.type == 'multitoggle') {
         if (id == 'AutoMagmiteSpender2' && btn.value == 1) {
-            magmiteSpenderChanged = true;
-            setTimeout(function() {
-                magmiteSpenderChanged = false;
-            }, 5000);
+            AT_GlobalVars.magmiteSpenderChanged = true;
+            setTimeout(function() { AT_GlobalVars.magmiteSpenderChanged = false; }, 10000);
         }
         btn.value++;
         if (btn.value > btn.name.length - 1)

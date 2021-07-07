@@ -206,7 +206,7 @@ function doPortal(challenge) {
 	var c2done = true;
 	if (!game.global.portalActive) return;
 	if (getPageSetting('spendmagmite')==1) {
-		autoMagmiteSpender();
+		AT_autoMagmiteSpender();
 	}
 	if (getPageSetting('autoheirlooms') == true) {
 		AT_collectHeirlooms();
