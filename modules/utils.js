@@ -140,6 +140,7 @@ function debug(message, type, c) {
 			break;
 		case 'nature':
 			sendDebug = getPageSetting('SpamNature');
+			break;
 		default:
 			debugger;
 			break;
