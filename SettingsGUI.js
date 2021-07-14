@@ -1160,7 +1160,7 @@ function settingChanged(id) {
         document.getElementById(id).setAttribute('class', 'noselect settingsBtn settingBtn' + btn.enabled);
     }
     if (btn.type == 'multitoggle') {
-        if (id == 'AutoMagmiteSpender2' && btn.value == 1) {
+        if (id == 'spendmagmite' && btn.value == 1) {
             AT_GlobalVars.magmiteSpenderChanged = true;
             setTimeout(function() { AT_GlobalVars.magmiteSpenderChanged = false; }, 10000);
         }
