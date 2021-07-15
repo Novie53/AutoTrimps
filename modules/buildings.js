@@ -184,7 +184,7 @@ function AT_buyBuildings() {
 			maxNurseAmount = getPageSetting('PreSpireNurseries');
 			spireOverride = true;
 		}
-		if (spireOverride || getPageSetting('NoNurseriesUntil') == -1 || game.global.world < getPageSetting('NoNurseriesUntil')) {
+		if (spireOverride || getPageSetting('NoNurseriesUntil') == -1 || game.global.world > getPageSetting('NoNurseriesUntil')) {
 			AT_safeBuyBuilding('Nursery', maxNurseAmount - game.buildings.Nursery.owned);
 		}
 	}
